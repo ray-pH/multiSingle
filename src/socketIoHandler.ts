@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { genRandomAlphanum } from './lib/utils'
 import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor } from './lib/types'
-import { userstate, games, colors } from './lib/types'
+import { userstate, games, colors, socketevent } from './lib/types'
 
 import * as pairFlipper from './games/pairFlipper'
 
@@ -46,18 +46,18 @@ export default function injectSocketIO(server : any) {
 
         let userdata : user = { id : uid, name : 'anon', roomid:'lobby', state : userstate.lobby };
         userlist[userdata.id] = userdata;
-        socket.emit('updateuser', userdata);
-        socket.emit('updateroomlist', roomlist);
+        socket.emit(socketevent.USER_UPDATE, userdata);
+        socket.emit(socketevent.ROOMLIST_UPDATE, roomlist);
         socket.join('lobby');
 
         socket.on('disconnect', () => {
             let lastroomid = userdata.roomid;
             user_remove(userdata);
-            io.to(lastroomid).emit('updateroom', roomlist[lastroomid]);
+            io.to(lastroomid).emit(socketevent.ROOM_UPDATE, roomlist[lastroomid]);
         });
 
         // Lobby ===========================================
-        socket.on('room_new', () => {
+        socket.on(socketevent.ROOM_NEW, () => {
             let roomid : string = "";
             do  roomid = genRandomAlphanum(5); while (roomid in roomlist);
             user_removeFromRooms(userdata.id);
@@ -70,11 +70,11 @@ export default function injectSocketIO(server : any) {
 
             // socketio
             socket.join(roomid);
-            io.emit('updateroomlist', roomlist);
-            socket.emit('updateuser', userdata);
-            socket.emit('updateroom', roomlist[roomid]);
+            io.to('lobby').emit(socketevent.ROOMLIST_UPDATE, roomlist);
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            socket.emit(socketevent.ROOM_UPDATE, roomlist[roomid]);
         });
-        socket.on('room_join', (roomid : id) => {
+        socket.on(socketevent.ROOM_JOIN, (roomid : id) => {
             user_removeFromRooms(userdata.id);
             if (!(roomid in roomlist)){
                 console.log('error : room does not exist');
@@ -90,40 +90,39 @@ export default function injectSocketIO(server : any) {
 
             // socketio
             socket.join(roomid);
-            io.emit('updateroomlist', roomlist);
-            socket.emit('updateuser', userdata);
-            io.to(roomid).emit('updateroom', roomlist[roomid]);
+            io.emit(socketevent.ROOMLIST_UPDATE, roomlist);
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(roomid).emit(socketevent.ROOM_UPDATE, roomlist[roomid]);
         });
-        socket.on('room_leave', () => {
+        socket.on(socketevent.ROOM_LEAVE, () => {
             let prevroomid = userdata.roomid;
             user_removeFromRooms(userdata.id);
             userdata.roomid = 'lobby';
             userdata.state  = userstate.lobby;
             // socketio
             socket.join('lobby');
-            io.emit('updateroomlist', roomlist);
-            socket.emit('updateuser', userdata);
-            io.to(prevroomid).emit('updateroom', roomlist[prevroomid]);
-            // socket.emit('updateroom', null);
+            io.emit(socketevent.ROOMLIST_UPDATE, roomlist);
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(prevroomid).emit(socketevent.ROOM_UPDATE, roomlist[prevroomid]);
         });
 
         // Room ===========================================
-        socket.on('game_toggleready', () => {
+        socket.on(socketevent.GAME_TOGGLEREADY, () => {
             userdata.state = (userdata.state == userstate.room_wait) ? 
                 userstate.room_ready : userstate.room_wait;
-            socket.emit('updateuser', userdata);
-            io.to(userdata.roomid).emit('updateroom', roomlist[userdata.roomid]);
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
         });
-        socket.on('game_requeststart', () => {
-            io.to(userdata.roomid).emit('game_start');
+        socket.on(socketevent.GAME_REQUESTSTART, () => {
+            io.to(userdata.roomid).emit(socketevent.GAME_START_SERVER);
         });
-        socket.on('game_start', () => {
+        socket.on(socketevent.GAME_START, () => {
             userdata.state = userstate.game;
-            socket.emit('updateuser', userdata);
-            io.to(userdata.roomid).emit('updateroom', roomlist[userdata.roomid]);
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
 
             let f_emitState = (state : any) => {
-                io.to(userdata.roomid).emit('game_updatestate', state);
+                io.to(userdata.roomid).emit(socketevent.GAME_UPDATESTATE, state);
             };
             // Game ===========================================
             // started by host and game not exist
@@ -134,6 +133,11 @@ export default function injectSocketIO(server : any) {
                 if (gameConstructors == undefined) return; gameConstructor = gameConstructor as gameConstructor;
                 gamelist[userdata.roomid] = new gameConstructor(roomlist[userdata.roomid], f_emitState);
             }
+        });
+
+        // Game ===========================================
+        socket.on(socketevent.GAME_INPUT, (input : any) => {
+            gamelist[userdata.roomid].sendInput(input);
         });
 
 

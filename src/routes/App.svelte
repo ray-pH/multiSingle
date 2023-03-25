@@ -2,7 +2,7 @@
     import { io } from '../lib/webSocketConnection.js';
     import { onMount } from 'svelte';
     import type { room, user, id, id_dict, roomsetting } from '../lib/types'
-    import { userstate, games } from '../lib/types'
+    import { userstate, games, socketevent } from '../lib/types'
 
     import Lobby from './Lobby.svelte'
     import Room from './Room.svelte'
@@ -11,8 +11,8 @@
     const def_roomsetting : roomsetting = {game : games.pairFlipper};
 
     let roomlist : id_dict<room> = {};
-    let userdata : user = { id : null, name : null, roomid : null, state : userstate.loading };
-    let roomdata : room = { id : null, hostid : null, members : {}, membercolors:{},setting : def_roomsetting};
+    let userdata : user = { id : 'null', name : 'null', roomid : 'null', state : userstate.loading };
+    let roomdata : room = { id : 'null', hostid : 'null', members : {}, membercolors:{},setting : def_roomsetting};
     const userstate_room = [userstate.room_wait, userstate.room_ready, userstate.room_host];
 
     // debug
@@ -26,17 +26,17 @@
     // debug
 
     onMount(() => {
-        io.on('updateroomlist', (data : any) => {
+        io.on(socketevent.ROOMLIST_UPDATE, (data : any) => {
             roomlist = data;
         });
-        io.on('updateuser', (data : user) => {
+        io.on(socketevent.USER_UPDATE, (data : user) => {
             userdata = data;
         });
-        io.on('updateroom', (room : room) => {
+        io.on(socketevent.ROOM_UPDATE, (room : room) => {
             roomdata = room;
         });
-        io.on('game_start', () => {
-            io.emit('game_start');
+        io.on(socketevent.GAME_START_SERVER, () => {
+            io.emit(socketevent.GAME_START);
         });
     });
 

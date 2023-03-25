@@ -1,13 +1,13 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
     import type { room, user, id, id_dict } from '../lib/types'
-    import { userstate } from '../lib/types'
+    import { userstate, socketevent } from '../lib/types'
 
     export let userdata : user;
     export let roomlist : id_dict<room>;
 
-    function room_new(){ io.emit('room_new'); }
-    function room_join(roomid : id){ io.emit('room_join', roomid); }
+    function room_new(){ io.emit(socketevent.ROOM_NEW); }
+    function room_join(roomid : id){ io.emit(socketevent.ROOM_JOIN, roomid); }
     function sendDebug(){ io.emit('debug', null); }
 </script>
 

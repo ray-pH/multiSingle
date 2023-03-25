@@ -1,7 +1,7 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
     import type { room, user, id, id_dict } from '../lib/types'
-    import { userstate } from '../lib/types'
+    import { userstate, socketevent } from '../lib/types'
 
     export let userdata : user;
     export let roomdata : room;
@@ -14,9 +14,9 @@
         return true;
     }
 
-    function room_leave(){ io.emit('room_leave'); }
-    function game_toggleready(){ io.emit('game_toggleready'); }
-    function game_requeststart(){ io.emit('game_requeststart'); }
+    function room_leave(){ io.emit(socketevent.ROOM_LEAVE); }
+    function game_toggleready(){ io.emit(socketevent.GAME_TOGGLEREADY); }
+    function game_requeststart(){ io.emit(socketevent.GAME_REQUESTSTART); }
     function sendDebug(){ io.emit('debug', null); }
 </script>
 

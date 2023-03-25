@@ -7,6 +7,15 @@
 
     export let userdata : user;
     export let roomdata : room;
+    let userscore : id_dict<number> = {};
+
+    function f_updatescore(uscore : id_dict<number>){
+        userscore = uscore;
+    }
+    function get_score(uid : id, uscore : id_dict<number>) : string {
+        if (!(uid in uscore)) return '-';
+        return (uscore[uid]).toString();
+    }
 </script>
 
 <style>
@@ -24,7 +33,15 @@
         margin: auto;
         max-width: 340px;
     }
-    #room-container{
+    .playerinfo {
+        padding: 5px 10px 5px;
+        border-radius: 10px;
+        margin-bottom: 5px;
+    }
+    .playerscore {
+        float: right;
+    }
+    /*#room-container{
         background-color: var(--cwhite);
         color: var(--cblack);
         padding: 20px;
@@ -61,11 +78,11 @@
         top: 0px; left: 0px;
     }
 
-    /*@media (min-width: 768px) {
+    @media (min-width: 768px) {
         .button {
             padding: 13px 50px 13px;
         }
-    }*/
+    }
 
     .topbutton-container{
         margin: 10px 0 20px 0;
@@ -79,18 +96,21 @@
         margin-right: 10px;
         color: white;
         border-color: white;
-    }
+    }*/
 </style>
 
 <div id="main-container" class="main">
     <div id="playerlist-container">
         {#each Object.keys(roomdata.members) as uid}
-            <div class="playerinfo" style="background-color:{roomdata.membercolors[uid]}">{uid}</div>
+            <div class="playerinfo" style="background-color:{roomdata.membercolors[uid]}">
+                {uid}
+                <span class="playerscore">{get_score(uid, userscore)}</span>
+            </div>
         {/each}
     </div>
     inGame
     {#if roomdata.setting.game == games.pairFlipper}
-        <G_PairFlipper />
+        <G_PairFlipper f_updatescore={f_updatescore}/>
     {/if}
 
 <!--     <button on:click={sendDebug}>debug</button> -->
