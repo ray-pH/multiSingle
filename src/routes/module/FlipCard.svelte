@@ -3,14 +3,14 @@
     export let value_back  : string = 'back';
     export let opened : boolean = false;
 
-    function flip(node, {
+    function flip(_node : any, {
         delay = 0,
         duration = 150
     }) {
         return {
             delay,
             duration,
-            css: (t, u) => `
+            css: (_t : number, u : number) => `
                     transform: rotateY(${1 - (u * 180)}deg);
                     opacity: ${1 - u};
                 `
