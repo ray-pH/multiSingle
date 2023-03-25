@@ -6,7 +6,7 @@ export enum userstate {
     game = 'Game', 
     loading = 'Loading',
 }
-export const colors = ['#D8315B','#FFE54C','#3E92CC','#04BF55',];
+export const colors = ['#D8315B','#3E92CC','#04BF55','#FFE54C'];
 
 export type color = string;
 export type id = string;
