@@ -5,6 +5,7 @@
     import type { room, user, id, id_dict, color } from '../lib/types'
     import type { gamestate, card, gameinput } from '../games/pairFlipper'
     import { cardstate, cardopenstate } from '../games/pairFlipper'
+    import FlipCard from './module/FlipCard.svelte'
 
     export let userdata : user;
     export let f_updatescore : (uscore : id_dict<number>) => void;
@@ -73,9 +74,11 @@
         margin : 5px;
     }
     .card {
-        padding : 10px;
-        background-color: white;
+        padding: 0;
+        margin: 0;
+        background-color: transparent;
         color: black;
+        border: none;
     }
 </style>
 
@@ -84,7 +87,7 @@
         {#each get_cardlist(gamestate) as cd}
             <div class="card-bg" style="background-color:{get_color_from_cardstate(cd.cardstate)}">
                 <button class="card" on:click={() => {send_input(cd.index)}}>
-                    {cd.value}
+                    <FlipCard value_front={cd.value} opened={cardopenstate.includes(cd.cardstate)}/>
                 </button>
             </div>
         {/each}
