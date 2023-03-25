@@ -10,10 +10,11 @@ export type playerdata = {
 export enum cardstate {
     closed, open0, open1, open2, open3, done,
 }
+export const cardopenstate = [cardstate.open0, cardstate.open1, cardstate.open2, cardstate.open3];
 
 export type gamestate = {
     board : card[], boardstate : cardstate[], 
-    players : id_dict<playerdata>, playerorder : id_dict<number>,
+    players : id_dict<playerdata>, playerorder : id[],
 }
 export type gameinput = {
     uid : id,
@@ -24,7 +25,7 @@ export class PairFlipper implements Game {
     board      : card[]      = [];
     boardstate : cardstate[] = [];
     players : id_dict<playerdata> = {};
-    playerorder : id_dict<number> = {};
+    playerorder : id[] = [];
 
     constructor(roomdata : room){
         this.initGame(['a','b','c'], roomdata);
@@ -41,7 +42,7 @@ export class PairFlipper implements Game {
         //order player
         let playerids = Object.keys(roomdata.members);
         shuffleArray(playerids);
-        for (let i in playerids) this.playerorder[playerids[i]] = parseInt(i);
+        this.playerorder = playerids;
     }
 
     generateBoard(symbols : Array<any>) : card[] {
@@ -50,9 +51,11 @@ export class PairFlipper implements Game {
         return board;
     }
 
-    sendInput(inp : gameinput) {
-        // TODO
-        console.log("TODO");
+    sendInput(inp : gameinput) : void{
+        if (inp == null) return;
+        let playernum = this.playerorder.indexOf(inp.uid);
+        if (playernum < 0) return;
+        this.boardstate[inp.clicked_card] = cardopenstate[playernum];
     }
 
     getState() : gamestate {

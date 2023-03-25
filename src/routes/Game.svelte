@@ -110,7 +110,7 @@
     </div>
     inGame
     {#if roomdata.setting.game == games.pairFlipper}
-        <G_PairFlipper f_updatescore={f_updatescore}/>
+        <G_PairFlipper playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
     {/if}
 
 <!--     <button on:click={sendDebug}>debug</button> -->

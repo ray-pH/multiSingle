@@ -1,17 +1,25 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
-    import type { room, user, id, id_dict } from '../lib/types'
     import { onMount } from 'svelte';
     import { userstate, socketevent } from '../lib/types'
+    import type { room, user, id, id_dict, color } from '../lib/types'
     import type { gamestate, card } from '../games/pairFlipper'
-    import type { cardstate } from '../games/pairFlipper'
+    import { cardstate, cardopenstate } from '../games/pairFlipper'
 
     export let f_updatescore : (uscore : id_dict<number>) => void;
+    export let playercolors  : id_dict<color> = {};
 
     var gamestate : gamestate = {
         board : [], boardstate : [], 
-        players : {}, playerorder : {},
+        players : {}, playerorder : [],
     };
+
+    function get_color_from_cardstate(cs : cardstate) : color {
+        let playernum : number = cardopenstate.indexOf(cs);
+        // TODO warn if playernum not exist
+        let uid : id = gamestate.playerorder[playernum];
+        return playercolors[uid];
+    }
 
     function get_cardlist(gs : gamestate) : {card : card, cardstate : cardstate}[] {
         let res = new Array(gs.board.length);
@@ -55,6 +63,9 @@
     }
     .card {
         padding : 10px;
+        background-color: white;
+        color: black;
+        margin : 5px;
     }
 </style>
 
