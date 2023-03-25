@@ -12,3 +12,4 @@ package-lock.json
 .npmrc
 .eslintrc.cjs
 .eslintignore
+server

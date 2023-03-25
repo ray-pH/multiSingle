@@ -1,5 +1,5 @@
-import type { user, room, id, color, id_dict, Game } from '../lib/types'
-import { shuffleArray } from '../lib/utils'
+import type { user, room, id, color, id_dict, Game } from '../lib/types.js'
+import { shuffleArray } from '../lib/utils.js'
 
 export type card = string;
 

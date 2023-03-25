@@ -1,9 +1,9 @@
 import { Server } from 'socket.io';
-import { genRandomAlphanum } from './lib/utils'
-import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor } from './lib/types'
-import { userstate, games, colors, socketevent } from './lib/types'
+import { genRandomAlphanum } from './lib/utils.js'
+import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor } from './lib/types.js'
+import { userstate, games, colors, socketevent } from './lib/types.js'
 
-import * as pairFlipper from './games/pairFlipper'
+import * as pairFlipper from './games/pairFlipper.js'
 
 const gameConstructors : Map<games, gameConstructor> = new Map<games, gameConstructor>([
     [games.pairFlipper, pairFlipper.PairFlipper],

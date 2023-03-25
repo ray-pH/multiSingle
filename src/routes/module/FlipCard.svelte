@@ -3,12 +3,12 @@
     export let value_back  : string = 'back';
     export let opened : boolean = false;
 
-    let audio_card_flip : HTMLAudioElement = new Audio('../../../src/sound/card-flip.wav');
+    let audio_card_flip : HTMLAudioElement | undefined = undefined;
     function flip(_node : any, {
         delay = 0,
         duration = 150
     }) {
-        audio_card_flip.play();
+        if (audio_card_flip != undefined) audio_card_flip.play();
         return {
             delay,
             duration,
@@ -19,6 +19,7 @@
         };
     }
 </script>
+<audio src="/sound/card-flip.wav" bind:this={audio_card_flip}></audio>
 
 
 <style>
