@@ -8,9 +8,11 @@ export type playerdata = {
 }
 
 export enum cardstate {
-    closed, open0, open1, open2, open3, done,
+    closed, open0, open1, open2, open3,
+            done0, done1, done2, done3,
 }
 export const cardopenstate = [cardstate.open0, cardstate.open1, cardstate.open2, cardstate.open3];
+export const carddonestate = [cardstate.done0, cardstate.done1, cardstate.done2, cardstate.done3];
 
 export type gamestate = {
     board : card[], boardstate : cardstate[], 
@@ -50,6 +52,11 @@ export class PairFlipper implements Game {
         shuffleArray(board);
         return board;
     }
+    
+    addPoint(playernum : number, point : number) : void{
+        let uid : id = this.playerorder[playernum];
+        this.players[uid].score += point;
+    }
 
     clickCard(playernum : number, cardid : number) : void {
         // if not closed, return
@@ -64,9 +71,16 @@ export class PairFlipper implements Game {
                 break;
             }
             case 1 :{
-                // TODO check if same
-                this.boardstate[openids[0]] = cardstate.closed;
-                this.boardstate[cardid] = playeropenstate;
+                if (this.board[openids[0]] == this.board[cardid]){
+                    //same
+                    this.boardstate[openids[0]] = carddonestate[playernum];
+                    this.boardstate[cardid]     = carddonestate[playernum];
+                    this.addPoint(playernum, 100);
+                }else{
+                    //different
+                    this.boardstate[openids[0]] = cardstate.closed;
+                    this.boardstate[cardid]     = playeropenstate;
+                }
                 break;
             }
             default :{

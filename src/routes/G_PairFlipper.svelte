@@ -4,7 +4,7 @@
     import { userstate, socketevent } from '../lib/types'
     import type { room, user, id, id_dict, color } from '../lib/types'
     import type { gamestate, card, gameinput } from '../games/pairFlipper'
-    import { cardstate, cardopenstate } from '../games/pairFlipper'
+    import { cardstate, cardopenstate, carddonestate } from '../games/pairFlipper'
     import FlipCard from './module/FlipCard.svelte'
 
     export let userdata : user;
@@ -94,7 +94,8 @@
         {#each get_cardlist(gamestate) as cd}
             <div class="card-bg" style="background-color:{get_color_from_cardstate(cd.cardstate)}">
                 <button class="card divbutton" on:click={() => {send_input(cd.index)}}>
-                    <FlipCard value_front={cd.value} opened={cardopenstate.includes(cd.cardstate)}/>
+                    <FlipCard value_front={cd.value} 
+                        opened={cardopenstate.includes(cd.cardstate) || carddonestate.includes(cd.cardstate)}/>
                 </button>
             </div>
         {/each}
