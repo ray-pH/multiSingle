@@ -58,8 +58,6 @@
     }
 </style>
 
-PairFlipper
-
 <div id="main-container" class="main">
     <div id="card-container">
         {#each get_cardlist(gamestate) as cd}
