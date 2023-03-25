@@ -51,11 +51,36 @@ export class PairFlipper implements Game {
         return board;
     }
 
+    clickCard(playernum : number, cardid : number) : void {
+        // if not closed, return
+        if (this.boardstate[cardid] != cardstate.closed) return;
+
+        let playeropenstate : cardstate = cardopenstate[playernum];
+        let openids : number[] = [];
+        for (let i in this.boardstate) if (this.boardstate[i] == playeropenstate) openids.push(parseInt(i));
+        switch (openids.length){
+            case 0 :{
+                this.boardstate[cardid] = playeropenstate;
+                break;
+            }
+            case 1 :{
+                // TODO check if same
+                this.boardstate[openids[0]] = cardstate.closed;
+                this.boardstate[cardid] = playeropenstate;
+                break;
+            }
+            default :{
+                for (let id of openids) this.boardstate[id] = cardstate.closed;
+                break;
+            }
+        }
+    }
+
     sendInput(inp : gameinput) : void{
         if (inp == null) return;
         let playernum = this.playerorder.indexOf(inp.uid);
         if (playernum < 0) return;
-        this.boardstate[inp.clicked_card] = cardopenstate[playernum];
+        this.clickCard(playernum, inp.clicked_card);
     }
 
     getState() : gamestate {
