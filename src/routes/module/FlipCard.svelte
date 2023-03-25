@@ -23,8 +23,8 @@
     
     .card-container {
         position: relative;
-        height: 50px;
-        width: 50px;
+        width: 100%;
+        height: 100%;
     }
     
     .card {

@@ -28,7 +28,7 @@ export class PairFlipper implements Game {
     playerorder : id[] = [];
 
     constructor(roomdata : room){
-        this.initGame(['a','b','c'], roomdata);
+        this.initGame(['a','b','c', 'd', 'e'], roomdata);
     }
 
     initGame(symbols : string[], roomdata : room){

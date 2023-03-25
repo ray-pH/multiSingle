@@ -66,19 +66,26 @@
         margin: auto;
         max-width: 340px;
     }
-    #card-container {
-        display: flex;
-    }
-    .card-bg{
-        padding: 5px;
-        margin : 5px;
-    }
-    .card {
+    .divbutton{
         padding: 0;
         margin: 0;
         background-color: transparent;
         color: black;
         border: none;
+    }
+    #card-container {
+        width: 100%;
+        display: grid;
+        grid-gap: 4px;
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    }
+    .card-bg{
+        aspect-ratio: 1/1;
+        padding: 5px;
+    }
+    .card {
+        width: 100%;
+        height: 100%;
     }
 </style>
 
@@ -86,7 +93,7 @@
     <div id="card-container">
         {#each get_cardlist(gamestate) as cd}
             <div class="card-bg" style="background-color:{get_color_from_cardstate(cd.cardstate)}">
-                <button class="card" on:click={() => {send_input(cd.index)}}>
+                <button class="card divbutton" on:click={() => {send_input(cd.index)}}>
                     <FlipCard value_front={cd.value} opened={cardopenstate.includes(cd.cardstate)}/>
                 </button>
             </div>
