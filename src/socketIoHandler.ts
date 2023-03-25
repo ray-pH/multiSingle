@@ -121,23 +121,25 @@ export default function injectSocketIO(server : any) {
             socket.emit(socketevent.USER_UPDATE, userdata);
             io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
 
-            let f_emitState = (state : any) => {
-                io.to(userdata.roomid).emit(socketevent.GAME_UPDATESTATE, state);
-            };
             // Game ===========================================
             // started by host and game not exist
             // TODO: alert if game already exist
-            if (userdata.id == roomlist[userdata.roomid].hostid && !(userdata.roomid in gamelist)){
-                let game = roomlist[userdata.roomid].setting.game;
+            let room : room = roomlist[userdata.roomid];
+            if (userdata.id == room.hostid && !(userdata.roomid in gamelist)){
+                let game = room.setting.game;
                 let gameConstructor : gameConstructor | undefined = gameConstructors.get(game);
                 if (gameConstructors == undefined) return; gameConstructor = gameConstructor as gameConstructor;
-                gamelist[userdata.roomid] = new gameConstructor(roomlist[userdata.roomid], f_emitState);
+                gamelist[userdata.roomid] = new gameConstructor(room);
             }
         });
 
         // Game ===========================================
         socket.on(socketevent.GAME_INPUT, (input : any) => {
-            gamelist[userdata.roomid].sendInput(input);
+            let game : Game = gamelist[userdata.roomid];
+            game.sendInput(input);
+            // emit gamestate
+            let gamestate : any = game.getState();
+            io.to(userdata.roomid).emit(socketevent.GAME_UPDATESTATE, gamestate);
         });
 
 

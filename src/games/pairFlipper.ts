@@ -1,7 +1,7 @@
 import type { user, room, id, color, id_dict, Game } from '../lib/types'
 import { shuffleArray } from '../lib/utils'
 
-type card = string;
+export type card = string;
 
 export type playerdata = {
     id : id, score : number,
@@ -15,6 +15,10 @@ export type gamestate = {
     board : card[], boardstate : cardstate[], 
     players : id_dict<playerdata>, playerorder : id_dict<number>,
 }
+export type gameinput = {
+    uid : id,
+    clicked_card : number,
+}
 
 export class PairFlipper implements Game {
     board      : card[]      = [];
@@ -22,11 +26,8 @@ export class PairFlipper implements Game {
     players : id_dict<playerdata> = {};
     playerorder : id_dict<number> = {};
 
-    emitState : (state : any) => void;
-
-    constructor(roomdata : room, f_emitState : (state : any) => void){
+    constructor(roomdata : room){
         this.initGame(['a','b','c'], roomdata);
-        this.emitState = f_emitState;
     }
 
     initGame(symbols : string[], roomdata : room){
@@ -49,17 +50,19 @@ export class PairFlipper implements Game {
         return board;
     }
 
-    sendInput() {
-        console.log("todo");
-        // emit back
+    sendInput(inp : gameinput) {
+        // TODO
+        console.log("TODO");
+    }
+
+    getState() : gamestate {
         let gamestate : gamestate = {
             board       : this.board,
             boardstate  : this.boardstate,
             players     : this.players,
             playerorder : this.playerorder,
         }
-        this.emitState(gamestate);
+        return gamestate;
     }
-
 }
 

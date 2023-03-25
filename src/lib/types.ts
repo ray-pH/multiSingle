@@ -16,11 +16,12 @@ export type user = { id : id, name : string, roomid : id, state : userstate};
 export type room = { id : id, hostid : id, members : id_dict<user>, membercolors : id_dict<color>, setting : roomsetting };
 
 export interface Game {
-    f_emitState(state : any) : void;
-    emitState() : void;
+    // f_emitState(state : any) : void;
+    // emitState() : void;
+    getState() : any;
     sendInput(inp : any) : void;
 }
-export type gameConstructor = { new(r : room, f_emitState : (state : any) => void) : Game }
+export type gameConstructor = { new(r : room) : Game }
 
 export enum games {
     pairFlipper
