@@ -1,8 +1,10 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
-    import type { room, user, id, id_dict } from '../lib/types'
-    import { userstate, socketevent } from '../lib/types'
-    import * as audio from '../lib/soundlib.js'
+    import type { room, user, id, id_dict } from '../lib/types';
+    import { userstate, socketevent } from '../lib/types';
+    import { audio_init, play_instance, play_then_run } from '../lib/soundlib.js';
+    let audio = audio_init();
+    let play_hover = ()=>play_instance(audio.button_hover);
 
     export let userdata : user;
     export let roomdata : room;
@@ -121,8 +123,8 @@
         room     : {userdata.roomid}<br>
     </div>
     <div class="topbutton-container">
-        <button on:mouseenter={audio.play_hover}
-                on:click={()=>audio.play_then_run(audio.button_click, room_leave)}
+        <button on:mouseenter={play_hover}
+                on:click={()=>play_then_run(audio.button_click, room_leave)}
             class="topbutton button" >Leave room</button>
     </div>
 
@@ -146,8 +148,8 @@
             {#if roomdata.hostid == userdata.id}
                 <!-- if host -->
                 {#if is_allReady(roomdata.members)}
-                    <button on:mouseenter={audio.play_hover}
-                            on:click={()=>audio.play_then_run(audio.button_click, game_requeststart)}
+                    <button on:mouseenter={play_hover}
+                            on:click={()=>play_then_run(audio.button_click, game_requeststart)}
                         class="botbutton button" >Start</button>
                 {:else}
                     <button disabled class="botbutton button" on:click={() => {}}>Start</button>

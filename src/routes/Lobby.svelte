@@ -1,8 +1,10 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
-    import type { room, user, id, id_dict } from '../lib/types'
-    import { userstate, socketevent } from '../lib/types'
-    import * as audio from '../lib/soundlib.js'
+    import type { room, user, id, id_dict } from '../lib/types';
+    import { userstate, socketevent } from '../lib/types';
+    import { audio_init, play_instance, play_then_run } from '../lib/soundlib.js';
+    let audio = audio_init();
+    let play_hover = ()=>play_instance(audio.button_hover);
 
     export let userdata : user;
     export let roomlist : id_dict<room>;
@@ -92,10 +94,10 @@
         room     : {userdata.roomid}<br>
     </div>
     <div class="topbutton-container">
-        <button on:mouseenter={audio.play_hover} 
-                on:click={() => audio.play_then_run(audio.button_click, room_new)}
+        <button on:mouseenter={play_hover} 
+                on:click={() => play_then_run(audio.button_click, room_new)}
             class="topbutton button">New room</button>
-        <button on:mouseenter={audio.play_hover} on:click={()=>{}}
+        <button on:mouseenter={play_hover} on:click={()=>{}}
             class="topbutton button" >Join room</button>
     </div>
 
