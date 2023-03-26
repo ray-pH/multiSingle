@@ -2,6 +2,7 @@
     import { io } from '../lib/webSocketConnection.js';
     import type { room, user, id, id_dict } from '../lib/types'
     import { userstate, socketevent } from '../lib/types'
+    import * as audio from '../lib/soundlib.js'
 
     export let userdata : user;
     export let roomlist : id_dict<room>;
@@ -91,8 +92,11 @@
         room     : {userdata.roomid}<br>
     </div>
     <div class="topbutton-container">
-        <button class="topbutton button" on:click={room_new}>New room</button>
-        <button class="topbutton button" on:click={()=>{}}>Join room</button>
+        <button on:mouseenter={audio.play_hover} 
+                on:click={() => audio.play_then_run(audio.button_click, room_new)}
+            class="topbutton button">New room</button>
+        <button on:mouseenter={audio.play_hover} on:click={()=>{}}
+            class="topbutton button" >Join room</button>
     </div>
 
     <div id="room-container">

@@ -13,3 +13,4 @@ package-lock.json
 .eslintrc.cjs
 .eslintignore
 server
+static/sound/unused

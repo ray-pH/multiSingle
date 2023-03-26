@@ -1,1 +1,1 @@
-card-flip : https://freesound.org/people/f4ngy/sounds/240776/
+https://freesound.org/people/{userid}/sounds/{soundid}/ : {soundid}__{userid}__{songname}.*
