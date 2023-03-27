@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { genRandomAlphanum } from './lib/utils.js'
 import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor } from './lib/types.js'
-import { userstate, games, colors, socketevent } from './lib/types.js'
+import { userstate, games, colorlist, socketevent } from './lib/types.js'
 
 import * as pairFlipper from './games/pairFlipper.js'
 
@@ -64,7 +64,7 @@ export default function injectSocketIO(server : any) {
             roomlist[roomid] = { id : roomid, hostid : uid , 
                 members:{}, membercolors:{}, setting : def_roomsetting};
             roomlist[roomid].members[userdata.id] = userdata;
-            roomlist[roomid].membercolors[userdata.id] = colors[0];
+            roomlist[roomid].membercolors[userdata.id] = colorlist[0];
             userdata.roomid = roomid;
             userdata.state  = userstate.room_host;
 
@@ -85,7 +85,7 @@ export default function injectSocketIO(server : any) {
             userdata.state  = userstate.room_wait;
 
             //color
-            let avail_colors = colors.filter((c) => !(Object.values(roomlist[roomid].membercolors).includes(c)));
+            let avail_colors = colorlist.filter((c) => !(Object.values(roomlist[roomid].membercolors).includes(c)));
             roomlist[roomid].membercolors[userdata.id] = avail_colors[0];
 
             // socketio

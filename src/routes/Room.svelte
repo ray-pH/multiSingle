@@ -2,9 +2,7 @@
     import { io } from '../lib/webSocketConnection.js';
     import type { room, user, id, id_dict } from '../lib/types';
     import { userstate, socketevent } from '../lib/types';
-    import { audio_init, play_instance, play_then_run } from '../lib/soundlib.js';
-    let audio = audio_init();
-    let play_hover = ()=>play_instance(audio.button_hover);
+    import Button from './module/Button.svelte';
 
     export let userdata : user;
     export let roomdata : room;
@@ -54,46 +52,6 @@
     .container-label {
         font-weight: bold;
     }
-    .button {
-        font-size: 16px; font-weight: 200; letter-spacing: 1px;
-        outline: 0; border: 1px solid black; background-color: rgba(0, 0, 0, 0);
-        cursor: pointer; position: relative;
-        padding: 13px 30px 13px;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-    }
-
-    .button:after {
-        background-color: var(--ccyan);
-        content: ""; width: 100%;
-        position: absolute; z-index: -1;
-        height: 100%;
-        top: 7px; left: 7px;
-        transition: 0.2s; 
-    }
-    .button:disabled:after {
-        background-color: var(--cgrey);
-    }
-
-    .button:hover:after {
-        top: 0px; left: 0px;
-    }
-
-    .topbutton{
-        margin-right: 10px;
-        color: white;
-        border-color: white;
-    }
-    .botbutton{
-        margin-right: 10px;
-        color: white;
-        border-color: white;
-    }
-    .playersettingbutton{
-        padding: 1px 10px 1px;
-        float: right;
-    }
     .playerelem-status{
         float: right;
         font-size: 12px;
@@ -123,9 +81,8 @@
         room     : {userdata.roomid}<br>
     </div>
     <div class="topbutton-container">
-        <button on:mouseenter={play_hover}
-                on:click={()=>play_then_run(audio.button_click, room_leave)}
-            class="topbutton button" >Leave room</button>
+        <Button text='Leave Room'action={room_leave} 
+            --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
     </div>
 
     <div id="room-container">
@@ -135,7 +92,8 @@
             {#each Object.keys(roomdata.members) as uid}
                 <div class="playerelem-container">
                     <span class="playerelem-name">{uid}</span>
-                    <button class="button playersettingbutton">+</button>
+                    <Button text='+'
+                        --padding='1px 10px 1px' --float='right'/>
                     <span class="playerelem-status">{roomdata.members[uid].state}</span>
                 </div>
             {/each}
@@ -148,17 +106,19 @@
             {#if roomdata.hostid == userdata.id}
                 <!-- if host -->
                 {#if is_allReady(roomdata.members)}
-                    <button on:mouseenter={play_hover}
-                            on:click={()=>play_then_run(audio.button_click, game_requeststart)}
-                        class="botbutton button" >Start</button>
+                    <Button text='Start' action={game_requeststart}
+                        --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
                 {:else}
-                    <button disabled class="botbutton button" on:click={() => {}}>Start</button>
+                    <Button text='Start' disabled={true}
+                        --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
                     <span class="botinfo">not everyone is ready</span>
                 {/if}
             {:else if userdata.state == userstate.room_wait}
-                <button class="botbutton button" on:click={game_toggleready}>Ready</button>
+                <Button text='Ready' action={game_toggleready} 
+                    --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
             {:else}
-                <button class="botbutton button" on:click={game_toggleready}>Cancel Ready</button>
+                <Button text='Cancel Ready' action={game_toggleready} 
+                    --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
             {/if} 
         {/if}
     </div>

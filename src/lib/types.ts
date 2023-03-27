@@ -5,8 +5,18 @@ export enum userstate {
     room_ready = 'Ready', 
     game = 'Game', 
     loading = 'Loading',
-}
-export const colors = ['#D8315B','#3E92CC','#04BF55','#FFE54C'];
+};
+export const colors = {
+    BLACK  : '#1E1B18', 
+    RED    : '#D8315B', 
+    WHITE  : '#FFFAFF', 
+    CYAN   : '#3E92CC', 
+    BLUE   : '#0A2463', 
+    YELLOW : '#FFE54C', 
+    GREEN  : '#04BF55', 
+    GREY   : '#666666', 
+};
+export const colorlist = ['#D8315B','#3E92CC','#04BF55','#FFE54C'];
 
 export type color = string;
 export type id = string;
