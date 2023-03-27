@@ -1,20 +1,35 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
     import { onMount } from 'svelte';
-    import { userstate, socketevent } from '../lib/types'
-    import type { room, user, id, id_dict, color } from '../lib/types'
-    import type { gamestate, card, gameinput } from '../games/pairFlipper'
-    import { cardstate, cardopenstate, carddonestate } from '../games/pairFlipper'
-    import FlipCard from './module/FlipCard.svelte'
+    import { userstate, socketevent } from '../lib/types';
+    import type { room, user, id, id_dict, color, scoredata } from '../lib/types';
+    import type { gamestate, card, gameinput } from '../games/pairFlipper';
+    import { cardstate, cardopenstate, carddonestate } from '../games/pairFlipper';
+    import FlipCard from './module/FlipCard.svelte';
+    import Game_Finish from './Game_Finish.svelte';
 
     export let userdata : user;
     export let f_updatescore : (uscore : id_dict<number>) => void;
     export let playercolors  : id_dict<color> = {};
 
+    let finished : boolean = false;
     var gamestate : gamestate = {
         board : [], boardstate : [], 
         players : {}, playerorder : [],
     };
+
+    function get_scoredata(gs : gamestate) : scoredata[] {
+        let res : scoredata[] = [];
+        for (let uid in gamestate.players)
+            res.push({id:uid, name:gamestate.players[uid].name, score : gamestate.players[uid].score})
+        let comparescore = (a : scoredata, b : scoredata) => {
+            if (a.score > b.score) return 1;
+            if (b.score > a.score) return -1;
+            return 0;
+        };
+        res.sort((a,b) => comparescore(a,b));
+        return res;
+    }
 
     function get_color_from_cardstate(cs : cardstate) : color {
         let playernum : number = cardopenstate.indexOf(cs);
@@ -46,6 +61,9 @@
             for (let uid in gamestate.players) 
                 userscore[uid] = gamestate.players[uid].score;
             f_updatescore(userscore);
+        });
+        io.on(socketevent.GAME_FINISH, () => {
+            finished = true;
         });
     });
 
@@ -101,3 +119,7 @@
         {/each}
     </div>
 </div>
+
+{#if finished}
+    <Game_Finish scoredata={get_scoredata(gamestate)} playercolors={playercolors}/>
+{/if}

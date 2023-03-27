@@ -140,6 +140,8 @@ export default function injectSocketIO(server : any) {
             // emit gamestate
             let gamestate : any = game.getState();
             io.to(userdata.roomid).emit(socketevent.GAME_UPDATESTATE, gamestate);
+            if (game.isDone())
+                io.to(userdata.roomid).emit(socketevent.GAME_FINISH);
         });
 
 

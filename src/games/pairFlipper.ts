@@ -4,7 +4,7 @@ import { shuffleArray } from '../lib/utils.js'
 export type card = string;
 
 export type playerdata = {
-    id : id, score : number,
+    id : id, name: string, score : number,
 }
 
 export enum cardstate {
@@ -40,7 +40,8 @@ export class PairFlipper implements Game {
         this.boardstate.fill(cardstate.closed);
 
         // setup player
-        for (let uid in roomdata.members) this.players[uid] = {id:uid, score:0};
+        for (let uid in roomdata.members) 
+            this.players[uid] = {id:uid, name:roomdata.members[uid].name, score:0};
         //order player
         let playerids = Object.keys(roomdata.members);
         shuffleArray(playerids);
@@ -88,6 +89,11 @@ export class PairFlipper implements Game {
                 break;
             }
         }
+    }
+
+    isDone() : boolean {
+        for (let cs of this.boardstate) if (cs == cardstate.closed) return false;
+        return true;
     }
 
     sendInput(inp : gameinput) : void{
