@@ -3,6 +3,7 @@
     import type { room, user, id, id_dict } from '../lib/types';
     import { userstate, socketevent } from '../lib/types';
     import Button from './module/Button.svelte';
+    import ChatBox from './module/ChatBox.svelte';
 
     export let userdata : user;
     export let roomdata : room;
@@ -122,4 +123,6 @@
             {/if} 
         {/if}
     </div>
+
+    <ChatBox chat={roomdata.chat} color_dict={roomdata.membercolors}/>
 </div>

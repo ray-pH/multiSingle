@@ -12,13 +12,13 @@
 
     let roomlist : id_dict<room> = {};
     let userdata : user = { id : 'null', name : 'null', roomid : 'null', state : userstate.loading };
-    let roomdata : room = { id : 'null', hostid : 'null', members : {}, membercolors:{},setting : def_roomsetting};
+    let roomdata : room = { id : 'null', hostid : 'null', members : {}, membercolors:{}, chat:[], setting : def_roomsetting};
     const userstate_room = [userstate.room_wait, userstate.room_ready, userstate.room_host];
 
     // debug
-    let r1 : room = {id : 'a3d3s', hostid : 'o29e3', members:{}, membercolors:{}, setting:def_roomsetting};
-    let r2 : room = {id : 's382j', hostid : '283jd', members:{}, membercolors:{}, setting:def_roomsetting};
-    let r3 : room = {id : 'x221x', hostid : 'jd21s', members:{}, membercolors:{}, setting:def_roomsetting};
+    let r1 : room = {id : 'a3d3s', hostid : 'o29e3', members:{}, membercolors:{}, chat:[], setting:def_roomsetting};
+    let r2 : room = {id : 's382j', hostid : '283jd', members:{}, membercolors:{}, chat:[], setting:def_roomsetting};
+    let r3 : room = {id : 'x221x', hostid : 'jd21s', members:{}, membercolors:{}, chat:[], setting:def_roomsetting};
     let debugroomlist : id_dict<room> = {};
     debugroomlist[r1.id] = r1;
     debugroomlist[r2.id] = r2;

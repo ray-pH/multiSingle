@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import { genRandomAlphanum } from './lib/utils.js'
-import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor } from './lib/types.js'
+import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor, chatmessage } from './lib/types.js'
 import { userstate, games, colorlist, socketevent } from './lib/types.js'
 
 import * as pairFlipper from './games/pairFlipper.js'
@@ -62,7 +62,7 @@ export default function injectSocketIO(server : any) {
             do  roomid = genRandomAlphanum(5); while (roomid in roomlist);
             user_removeFromRooms(userdata.id);
             roomlist[roomid] = { id : roomid, hostid : uid , 
-                members:{}, membercolors:{}, setting : def_roomsetting};
+                members:{}, membercolors:{}, setting : def_roomsetting, chat : []};
             roomlist[roomid].members[userdata.id] = userdata;
             roomlist[roomid].membercolors[userdata.id] = colorlist[0];
             userdata.roomid = roomid;
@@ -132,6 +132,14 @@ export default function injectSocketIO(server : any) {
                 gamelist[userdata.roomid] = new gameConstructor(room);
             }
         });
+
+        // Chat =======================================
+        socket.on(socketevent.CHAT_MSG, (msg : string) => {
+            let message : chatmessage = { id : userdata.id, message : msg };
+            roomlist[userdata.roomid].chat.push(message);
+            io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
+        });
+
 
         // Game ===========================================
         socket.on(socketevent.GAME_INPUT, (input : any) => {

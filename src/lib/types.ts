@@ -22,8 +22,10 @@ export type color = string;
 export type id = string;
 export type id_dict<T> = {[key: id]: T};
 export type user = { id : id, name : string, roomid : id, state : userstate};
-export type room = { id : id, hostid : id, members : id_dict<user>, membercolors : id_dict<color>, setting : roomsetting };
+export type room = { id : id, hostid : id, members : id_dict<user>, membercolors : id_dict<color>, 
+    chat : chatmessage[], setting : roomsetting };
 export type scoredata = {id : id, name : string, score : number};
+export type chatmessage = { id : id, message : string };
 
 export interface Game {
     sendInput(inp : any) : void;
@@ -55,4 +57,5 @@ export enum socketevent {
     GAME_UPDATESTATE  = 'GAME_UPDATESTATE',
     GAME_FINISH       = 'GAME_FINISH',
     GAME_TOROOM       = 'GAME_TOROOM',
+    CHAT_MSG          = 'CHAT_MSG',
 }
