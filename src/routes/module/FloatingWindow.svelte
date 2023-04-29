@@ -13,7 +13,8 @@
     }
     .dim-bg{
         background-color:rgba(0,0,0,0.5);
-        position: fixed;
+        position: absolute;
+        z-index: 2;
         left: 0; top: 0;
         width: 100%;
         height: 100%;
@@ -28,6 +29,9 @@
         color: black;
         padding: 10px;
         font-family:'Noto Sans';
+
+        position: relative;
+        z-index: 2;
     }
 </style>
 
