@@ -143,6 +143,12 @@ export default function injectSocketIO(server : any) {
             if (game.isDone())
                 io.to(userdata.roomid).emit(socketevent.GAME_FINISH);
         });
+        // return to room
+        socket.on(socketevent.GAME_TOROOM, () => {
+            userdata.state = roomlist[userdata.roomid].hostid == userdata.id ? userstate.room_host : userstate.room_wait;
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
+        });
 
 
         // Debug ===========================================

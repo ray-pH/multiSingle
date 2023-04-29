@@ -1,10 +1,15 @@
 <script lang="ts">
+    import { io } from '../lib/webSocketConnection.js';
     import FloatingWindow from './module/FloatingWindow.svelte'
+    import Button from './module/Button.svelte';
 
     import type { id_dict, color, scoredata } from '../lib/types';
+    import { userstate, games, socketevent } from '../lib/types'
 
     export let scoredata : scoredata[] = [];
     export let playercolors  : id_dict<color> = {};
+
+    function game_toroom(){ io.emit(socketevent.GAME_TOROOM); }
 </script>
 
 <style>
@@ -34,6 +39,9 @@
                 <span class="playerscore">{sd.score}</span>
             </div>
         {/each}
+        <Button text='Done' 
+            action={() => game_toroom()} 
+            --margin='10px 10px 10px 0px' --textcolor='white' --width='100%'/>
     </div>
 </FloatingWindow>
 

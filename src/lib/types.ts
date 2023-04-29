@@ -54,4 +54,5 @@ export enum socketevent {
     GAME_INPUT        = 'GAME_INPUT',
     GAME_UPDATESTATE  = 'GAME_UPDATESTATE',
     GAME_FINISH       = 'GAME_FINISH',
+    GAME_TOROOM       = 'GAME_TOROOM',
 }
