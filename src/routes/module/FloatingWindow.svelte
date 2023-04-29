@@ -27,7 +27,7 @@
         background-color: var(--cwhite);
         border-radius: 10px;
         color: black;
-        padding: 10px;
+        padding: 10px 20px 10px 20px;
         font-family:'Noto Sans';
 
         position: relative;
