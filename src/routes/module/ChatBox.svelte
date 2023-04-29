@@ -2,10 +2,14 @@
     import {afterUpdate } from 'svelte';
     import { io } from '../../lib/webSocketConnection.js';
     import { socketevent } from '../../lib/types'
-    import type { chatmessage, id_dict, color } from '../../lib/types'
+    import type { chatmessage, id_dict, color, room } from '../../lib/types'
 
-    export let color_dict : id_dict<color> = {};
-    export let chat : chatmessage[] = [];
+    export let roomdata : room;
+
+    let color_dict : id_dict<color> = {};
+    let chat : chatmessage[] = [];
+    $: color_dict = roomdata != null ? roomdata.membercolors : {};
+    $: chat = roomdata != null ? roomdata.chat : [];
 
     afterUpdate(() => {
         const div_message_container = document.getElementById('message-container');
@@ -62,6 +66,7 @@
     }
     .chatmsg{
         padding-left: 10px;
+        word-wrap: break-word;
     }
     .chatbox{
         margin-top: 5px;

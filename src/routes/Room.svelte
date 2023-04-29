@@ -124,5 +124,6 @@
         {/if}
     </div>
 
-    <ChatBox chat={roomdata.chat} color_dict={roomdata.membercolors}/>
+    <!-- <ChatBox chat={roomdata.chat} color_dict={roomdata.membercolors}/> -->
+    <ChatBox roomdata={roomdata}/>
 </div>
