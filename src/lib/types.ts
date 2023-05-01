@@ -32,10 +32,11 @@ export interface Game {
     getState() : any;
     isDone()   : boolean;
 }
-export type gameConstructor = { new(r : room) : Game }
+export type gameConstructor = { new(r : room, setting : any) : Game }
 
 export enum games {
-    pairFlipper
+    pairFlipper = 'Pair Flipper',
+    tiktakto    = 'TikTakTo',
 }
 
 export type roomsetting = {

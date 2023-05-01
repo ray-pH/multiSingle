@@ -4,6 +4,7 @@
     import { userstate, games, colors } from '../lib/types'
 
     import G_PairFlipper from './G_PairFlipper.svelte'
+    import G_Tiktakto from './G_Tiktakto.svelte'
 
     export let userdata : user;
     export let roomdata : room;
@@ -52,8 +53,9 @@
             </div>
         {/each}
     </div>
-    inGame
     {#if roomdata.setting.game == games.pairFlipper}
         <G_PairFlipper userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
+    {:else if roomdata.setting.game == games.tiktakto}
+        <G_Tiktakto userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
     {/if}
 </div>
