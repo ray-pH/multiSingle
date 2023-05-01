@@ -29,7 +29,7 @@ export class PairFlipper implements Game {
     players : id_dict<playerdata> = {};
     playerorder : id[] = [];
 
-    constructor(roomdata : room){
+    constructor(roomdata : room, _setting : any){
         this.initGame(['a','b','c', 'd', 'e'], roomdata);
     }
 
