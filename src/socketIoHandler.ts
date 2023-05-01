@@ -4,9 +4,11 @@ import type { room, user, id, color, id_dict, roomsetting, Game, gameConstructor
 import { userstate, games, colorlist, socketevent } from './lib/types.js'
 
 import * as pairFlipper from './games/pairFlipper.js'
+import * as tiktakto from './games/tiktakto.js'
 
 const gameConstructors : Map<games, gameConstructor> = new Map<games, gameConstructor>([
     [games.pairFlipper, pairFlipper.PairFlipper],
+    [games.tiktakto, tiktakto.Tiktakto],
 ]);
 
 
@@ -57,12 +59,14 @@ export default function injectSocketIO(server : any) {
         });
 
         // Lobby ===========================================
-        socket.on(socketevent.ROOM_NEW, () => {
+        socket.on(socketevent.ROOM_NEW, (setting : roomsetting) => {
+            console.log(setting);
             let roomid : string = "";
+            if (setting == undefined || setting == null) setting = def_roomsetting;
             do  roomid = genRandomAlphanum(5); while (roomid in roomlist);
             user_removeFromRooms(userdata.id);
             roomlist[roomid] = { id : roomid, hostid : uid , 
-                members:{}, membercolors:{}, setting : def_roomsetting, chat : []};
+                members:{}, membercolors:{}, setting : setting, chat : []};
             roomlist[roomid].members[userdata.id] = userdata;
             roomlist[roomid].membercolors[userdata.id] = colorlist[0];
             userdata.roomid = roomid;
@@ -128,8 +132,9 @@ export default function injectSocketIO(server : any) {
             if (userdata.id == room.hostid && !(userdata.roomid in gamelist)){
                 let game = room.setting.game;
                 let gameConstructor : gameConstructor | undefined = gameConstructors.get(game);
-                if (gameConstructors == undefined) return; gameConstructor = gameConstructor as gameConstructor;
-                gamelist[userdata.roomid] = new gameConstructor(room);
+                if (gameConstructors == undefined) return; 
+                gameConstructor = gameConstructor as gameConstructor;
+                gamelist[userdata.roomid] = new gameConstructor(room, room.setting);
             }
         });
 

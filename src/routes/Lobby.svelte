@@ -1,14 +1,23 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
-    import type { room, user, id, id_dict } from '../lib/types';
-    import { userstate, socketevent } from '../lib/types';
+    import type { room, user, id, id_dict, roomsetting } from '../lib/types';
+    import { userstate, socketevent, games } from '../lib/types';
 
     import Button from './module/Button.svelte';
 
     export let userdata : user;
     export let roomlist : id_dict<room>;
 
-    function room_new(){ io.emit(socketevent.ROOM_NEW); }
+    let state_setroom : boolean = false;
+    // room setting variables
+    let selected_game_id : number = -1;
+
+    function get_roomsetting() : roomsetting {
+        let selected_game = Object.values(games)[selected_game_id] as games;
+        return { game : selected_game };
+    }
+
+    function room_new(setting: roomsetting){ io.emit(socketevent.ROOM_NEW, setting); }
     function room_join(roomid : id){ io.emit(socketevent.ROOM_JOIN, roomid); }
     function sendDebug(){ io.emit('debug', null); }
 </script>
@@ -33,6 +42,7 @@
         padding: 20px;
         z-index: 0;
         margin-top: 10px;
+        margin-bottom: 10px;
         border-radius: 10px;
     }
     #roomlist-container{
@@ -47,6 +57,15 @@
     .topbutton-container{
         margin: 10px 0 20px 0;
     }
+
+    .game-selection{
+        padding:5px;
+        margin: 2px;
+    }
+    .game-selection.game-selected{
+        background-color: var(--ccyan);
+        color: white;
+    }
 </style>
 
 <div id="main-container" class="main">
@@ -56,22 +75,52 @@
         Username : {userdata.name}<br>
         room     : {userdata.roomid}<br>
     </div>
-    <div class="topbutton-container">
-        <Button text='New Room'  action={room_new} 
-            --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
-        <Button text='Join Room' action={()=>{}} 
-            --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
-    </div>
 
-    <div id="room-container">
-        <span class="container-label">Public Rooms :</span>
-        <div id="roomlist-container">
-            {#each Object.keys(roomlist) as rid}
-                <Button text='{rid} (host : {roomlist[rid].hostid})' 
-                    action={() => room_join(rid)} 
-                    --margin='10px 0px 0px 0px' --textcolor='white' --width='100%'/>
-            {/each}
+    {#if state_setroom}
+        <!-- SetRoom ================================== -->
+        <div class="topbutton-container">
+            <Button text='Cancel'  action={()=>{state_setroom = false}} 
+                --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
         </div>
-    </div>
+        <div id="room-container">
+            <span class="container-label">Select Game :</span>
+            <div id="roomlist-container">
+                {#each Object.values(games) as gamename, i}
+                    <button class:game-selected="{selected_game_id == i}" class="game-selection"
+                         on:click={()=>{selected_game_id = i}}>
+                         {gamename}
+                    </button>
+                {/each}
+            </div>
+        </div>
+        {#if selected_game_id >= 0}
+            <Button text='Next'  action={() => {room_new(get_roomsetting())}} 
+                --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
+        {:else}
+            <Button text='Next' disabled 
+                --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
+        {/if}
+    {:else}
+        <!-- Lobby ================================== -->
+        <div class="topbutton-container">
+            <!-- <Button text='New Room'  action={room_new} --> 
+            <!--     --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/> -->
+            <Button text='New Room'  action={()=>{state_setroom = true}} 
+                --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
+            <Button text='Join Room' action={()=>{}} 
+                --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
+        </div>
+
+        <div id="room-container">
+            <span class="container-label">Public Rooms :</span>
+            <div id="roomlist-container">
+                {#each Object.keys(roomlist) as rid}
+                    <Button text='{rid} (host : {roomlist[rid].hostid})' 
+                        action={() => room_join(rid)} 
+                        --margin='10px 0px 0px 0px' --textcolor='white' --width='100%'/>
+                {/each}
+            </div>
+        </div>
+    {/if}
 
 </div>
