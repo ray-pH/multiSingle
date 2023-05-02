@@ -1,6 +1,6 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
-    import type { room, user, id, id_dict, roomsetting } from '../lib/types'
+    import type { room, user, id, id_dict, roomsetting, color } from '../lib/types'
     import { userstate, games, colors } from '../lib/types'
 
     import G_PairFlipper from './G_PairFlipper.svelte'
@@ -9,6 +9,8 @@
     export let userdata : user;
     export let roomdata : room;
     let userscore : id_dict<number> = {};
+    let selfcolor : color;
+    $: selfcolor = roomdata.membercolors[userdata.id];
 
     function f_updatescore(uscore : id_dict<number>){
         userscore = uscore;
@@ -56,6 +58,6 @@
     {#if roomdata.setting.game == games.pairFlipper}
         <G_PairFlipper userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
     {:else if roomdata.setting.game == games.tiktakto}
-        <G_Tiktakto userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
+        <G_Tiktakto userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore} --selfcolor={selfcolor}/>
     {/if}
 </div>
