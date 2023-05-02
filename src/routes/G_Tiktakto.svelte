@@ -3,14 +3,18 @@
     import { onMount } from 'svelte';
     import { userstate, socketevent } from '../lib/types';
     import type { room, user, id, id_dict, color, scoredata } from '../lib/types';
-    import type { gamestate, square, gameinput } from '../games/tiktakto';
+    import type { gamestate, gameinput } from '../games/tiktakto';
+    import { square } from '../games/tiktakto';
     import Game_Finish from './Game_Finish.svelte';
 
     export let userdata : user;
     export let f_updatescore : (uscore : id_dict<number>) => void;
     export let playercolors  : id_dict<color> = {};
 
+    type squareSymbol = square.X | square.O;
+
     let finished : boolean = false;
+    let selected_symbol : squareSymbol = square.X;
     var gamestate : gamestate = {
         board : [], currentplayer : 0,
         players : {}, playerorder : [],
@@ -33,6 +37,15 @@
     }
     function get_next_player_id(gs : gamestate) : id{
         return gs.playerorder[(gs.currentplayer + 1) % gs.playerorder.length]
+    }
+
+    function send_input(pos : [number, number], sym : squareSymbol){
+        let inp : gameinput = {
+            uid : userdata.id,
+            position : pos,
+            symbol : sym,
+        }
+        io.emit(socketevent.GAME_INPUT, inp);
     }
 
     onMount(() => {
@@ -71,14 +84,14 @@
         grid-template-columns: repeat(5, 1fr);
         margin: 10px 0px 10px;
     }
-    .boardcell{
+    .board-cell{
         aspect-ratio: 1/1;
         border: none; 
         border-radius: 5px;
         background-color: #1E1B18;
         color: white;
     }
-    .boardcell:hover{
+    .board-cell:hover{
         background-color: #5E5B58;
         cursor: pointer;
     }
@@ -88,6 +101,25 @@
     .turn-indicator-id{
         border-radius: 10px;
         padding: 2px 5px 2px;
+    }
+    .symbolbutton{
+        background-color: white;
+        aspect-ratio: 1/1;
+        border: none; 
+        border-radius: 5px;
+        width: 50px;
+    }
+    .symbolbutton:hover{
+        background-color: #5E5B58;
+        color: white;
+        cursor: pointer;
+    }
+    .symbolbutton.selected-symbol{
+        background-color: var(--selfcolor, #3E92CC);
+        color: white;
+    }
+    .symbolbutton.selected-symbol:hover{
+        cursor: default;
     }
 </style>
 
@@ -108,9 +140,19 @@
     <div class="board">
         {#each gamestate.board as row, j}
             {#each row as symbol, i}
-                <button class="boardcell">{symbol}{j}{i}
+                <button class="board-cell empty-cell"
+                        on:click={()=>{send_input([j,i], selected_symbol)}}>
+                        {symbol}
                 </button>
             {/each}
         {/each}
     </div>
+    <button class="symbolbutton" class:selected-symbol={selected_symbol==square.X}
+            on:click={()=>{selected_symbol=square.X}}>X</button>
+    <button class="symbolbutton" class:selected-symbol={selected_symbol==square.O}
+            on:click={()=>{selected_symbol=square.O}}>O</button>
 </div>
+
+{#if finished}
+    <Game_Finish scoredata={get_scoredata(gamestate)} playercolors={playercolors}/>
+{/if}
