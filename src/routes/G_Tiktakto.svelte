@@ -90,6 +90,8 @@
         border-radius: 5px;
         background-color: #1E1B18;
         color: white;
+        font-size: 30px;
+        font-weight: bold;
     }
     .board-cell:hover{
         background-color: #5E5B58;
@@ -112,6 +114,8 @@
         border: none; 
         border-radius: 5px;
         width: 50px;
+        font-size: 20px;
+        font-weight: bold;
     }
     .symbolbutton:hover{
         background-color: #5E5B58;
