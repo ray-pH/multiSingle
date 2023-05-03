@@ -95,6 +95,10 @@
         background-color: #5E5B58;
         cursor: pointer;
     }
+    .board-cell:disabled{
+        background-color: #1E1B18;
+        cursor: default;
+    }
     .turn-next{
         float:right;
     }
@@ -138,14 +142,26 @@
         </span>
     </div>
     <div class="board">
-        {#each gamestate.board as row, j}
-            {#each row as symbol, i}
-                <button class="board-cell empty-cell"
-                        on:click={()=>{send_input([j,i], selected_symbol)}}>
-                        {symbol}
-                </button>
+        {#if get_curr_player_id(gamestate) == userdata.id}
+            <!-- this player turn -->
+            {#each gamestate.board as row, j}
+                {#each row as symbol, i}
+                    <button class="board-cell empty-cell"
+                            on:click={()=>{send_input([j,i], selected_symbol)}}>
+                            {symbol}
+                    </button>
+                {/each}
             {/each}
-        {/each}
+        {:else}
+            <!-- other player turn -->
+            {#each gamestate.board as row, j}
+                {#each row as symbol, i}
+                    <button disabled class="board-cell empty-cell">
+                            {symbol}
+                    </button>
+                {/each}
+            {/each}
+        {/if}
     </div>
     <button class="symbolbutton" class:selected-symbol={selected_symbol==square.X}
             on:click={()=>{selected_symbol=square.X}}>X</button>

@@ -55,6 +55,7 @@ export class Tiktakto implements Game {
 
     sendInput(inp : gameinput) : void {
         if (inp == null) return;
+        if (inp.uid != this.playerorder[this.currentplayer]) return; // validate turn
         let [row, col]  = inp.position;
         this.lastplayed = inp.position;
         this.board[row][col] = inp.symbol;
