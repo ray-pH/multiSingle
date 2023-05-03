@@ -1,9 +1,10 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
     import { onMount } from 'svelte';
+    import { arrayEq } from '$lib/utils.js';
     import { userstate, socketevent } from '../lib/types';
     import type { room, user, id, id_dict, color, scoredata } from '../lib/types';
-    import type { gamestate, gameinput } from '../games/tiktakto';
+    import type { gamestate, gameinput, pos } from '../games/tiktakto';
     import { square } from '../games/tiktakto';
     import Game_Finish from './Game_Finish.svelte';
 
@@ -44,7 +45,14 @@
         return gs.playerorder[(gs.currentplayer + gs.playerorder.length - 1) % gs.playerorder.length]
     }
 
+    function is_winningpos(position : pos, gs : gamestate) : boolean{
+        for (let winpos of gs.winnerline)
+            if (arrayEq(winpos, position)) return true;
+        return false;
+    }
+
     function send_input(pos : [number, number], sym : squareSymbol){
+        if (get_curr_player_id(gamestate) != userdata.id) return; // if not this player turn, skip
         let inp : gameinput = {
             uid : userdata.id,
             position : pos,
@@ -151,30 +159,29 @@
         </span>
     </div>
     <div class="board">
-        {#if get_curr_player_id(gamestate) == userdata.id}
-            <!-- this player turn -->
-            {#each gamestate.board as row, j}
-                {#each row as symbol, i}
-                    {#if symbol == square.empty}
-                        <button class="board-cell empty-cell"
-                                on:click={()=>{send_input([j,i], selected_symbol)}}>
-                                {symbol}
-                        </button>
-                    {:else}
-                        <button class="board-cell">{symbol}</button>
-                    {/if}
-                {/each}
-            {/each}
-        {:else}
-            <!-- other player turn -->
-            {#each gamestate.board as row, j}
-                {#each row as symbol, i}
-                    <button disabled class="board-cell empty-cell">
-                            {symbol}
-                    </button>
-                {/each}
-            {/each}
-        {/if}
+        {#each gamestate.board as row, j}
+        {#each row as symbol, i}
+            {#if symbol == square.empty}
+                <button class="board-cell empty-cell"
+                        on:click={()=>{send_input([j,i], selected_symbol)}}>
+                </button>
+            {:else}
+                <!-- non empty squre -->
+                {#if finished && is_winningpos([j,i], gamestate)}
+                    <button class="board-cell"
+                            style="background-color:{playercolors[get_prev_player_id(gamestate)]}"
+                    >{symbol}</button>
+                {:else if arrayEq(gamestate.lastplayed, [j,i])}
+                    <!-- highlight last played if nobody won yet -->
+                    <button class="board-cell"
+                            style="background-color:{playercolors[get_prev_player_id(gamestate)]}"
+                    >{symbol}</button>
+                {:else}
+                    <button class="board-cell">{symbol}</button>
+                {/if}
+            {/if}
+        {/each}
+        {/each}
     </div>
     <button class="symbolbutton" class:selected-symbol={selected_symbol==square.X}
             on:click={()=>{selected_symbol=square.X}}>X</button>

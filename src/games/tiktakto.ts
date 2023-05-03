@@ -1,7 +1,7 @@
 import type { user, room, id, color, id_dict, Game } from '../lib/types.js'
 import { shuffleArray, arrayEq } from '../lib/utils.js'
 
-type pos = [number, number];
+export type pos = [number, number];
 export type playerdata = {
     id : id, name: string, score : number,
 }
@@ -56,14 +56,13 @@ export class Tiktakto implements Game {
     sendInput(inp : gameinput) : void {
         if (inp == null) return;
         if (inp.uid != this.playerorder[this.currentplayer]) return; // validate turn
+        if (!arrayEq(this.winnerline[0],[-1,-1])) return; // if someone already won, skip
+
         let [row, col]  = inp.position;
         this.lastplayed = inp.position;
         if(this.board[row][col] != square.empty) return; // no clicking on non empty square
         this.board[row][col] = inp.symbol;
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
-
-        // if already done, skip
-        if (!arrayEq(this.winnerline[0],[-1,-1])) return;
 
         // calc score
         this.winnerline = this.checkWin();
