@@ -13,7 +13,7 @@
     }
     .dim-bg{
         background-color:rgba(0,0,0,0.5);
-        position: absolute;
+        position: fixed;
         z-index: 2;
         left: 0; top: 0;
         width: 100%;
