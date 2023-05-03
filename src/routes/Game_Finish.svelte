@@ -30,7 +30,7 @@
     }
 </style>
 
-<FloatingWindow>
+<FloatingWindow in_delay={2000}>
     <div class="scoretitle">GAME FINISHED</div>
     <div class="finish-container">
         {#each scoredata as sd}
@@ -44,4 +44,3 @@
             --margin='10px 10px 10px 0px' --textcolor='white' --width='100%'/>
     </div>
 </FloatingWindow>
-

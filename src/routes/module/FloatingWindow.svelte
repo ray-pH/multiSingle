@@ -1,5 +1,6 @@
 <script lang="ts">
     import { fade, fly, slide } from 'svelte/transition';
+    export let in_delay : number = 0;
 </script>
 
 <style>
@@ -35,7 +36,7 @@
     }
 </style>
 
-<div class="dim-bg" transition:fade>
+<div class="dim-bg" in:fade={{delay: in_delay}} out:fade>
     <div class="floating-container">
         <slot></slot>
     </div>
