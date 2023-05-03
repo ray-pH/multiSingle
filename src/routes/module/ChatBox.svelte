@@ -30,7 +30,7 @@
 
 <style>
     .chatbox-container{
-        position: fixed; 
+        position: absolute; 
         background-color: #00000050;
         bottom:10px;
         width: 340px;
@@ -82,8 +82,13 @@
         overflow-y: scroll;
         margin-bottom: 10px;
     }
+    .chatbox-filler{
+        height: 180px;
+    }
 </style>
 
+<div class='chatbox-filler'>
+</div>
 <div class='chatbox-container'>
     <div class='message-container' id='message-container'>
         {#each chat as chatmessage }

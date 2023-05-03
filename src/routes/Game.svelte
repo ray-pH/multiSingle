@@ -3,6 +3,7 @@
     import type { room, user, id, id_dict, roomsetting, color } from '../lib/types'
     import { userstate, games, colors } from '../lib/types'
 
+    import ChatBox from './module/ChatBox.svelte';
     import G_PairFlipper from './G_PairFlipper.svelte'
     import G_Tiktakto from './G_Tiktakto.svelte'
 
@@ -32,6 +33,7 @@
         --cyellow: #FFE54C;
     }
     .main {
+        position: relative;
         font-family:'Noto Sans';
         margin: auto;
         max-width: 340px;
@@ -60,4 +62,6 @@
     {:else if roomdata.setting.game == games.tiktakto}
         <G_Tiktakto userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore} --selfcolor={selfcolor}/>
     {/if}
+
+    <ChatBox roomdata={roomdata}/>
 </div>
