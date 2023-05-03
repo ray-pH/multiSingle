@@ -40,6 +40,9 @@
     function get_next_player_id(gs : gamestate) : id{
         return gs.playerorder[(gs.currentplayer + 1) % gs.playerorder.length]
     }
+    function get_prev_player_id(gs : gamestate) : id{
+        return gs.playerorder[(gs.currentplayer + gs.playerorder.length - 1) % gs.playerorder.length]
+    }
 
     function send_input(pos : [number, number], sym : squareSymbol){
         let inp : gameinput = {
@@ -152,10 +155,14 @@
             <!-- this player turn -->
             {#each gamestate.board as row, j}
                 {#each row as symbol, i}
-                    <button class="board-cell empty-cell"
-                            on:click={()=>{send_input([j,i], selected_symbol)}}>
-                            {symbol}
-                    </button>
+                    {#if symbol == square.empty}
+                        <button class="board-cell empty-cell"
+                                on:click={()=>{send_input([j,i], selected_symbol)}}>
+                                {symbol}
+                        </button>
+                    {:else}
+                        <button class="board-cell">{symbol}</button>
+                    {/if}
                 {/each}
             {/each}
         {:else}

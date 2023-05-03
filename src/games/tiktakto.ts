@@ -58,6 +58,7 @@ export class Tiktakto implements Game {
         if (inp.uid != this.playerorder[this.currentplayer]) return; // validate turn
         let [row, col]  = inp.position;
         this.lastplayed = inp.position;
+        if(this.board[row][col] != square.empty) return; // no clicking on non empty square
         this.board[row][col] = inp.symbol;
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
 
