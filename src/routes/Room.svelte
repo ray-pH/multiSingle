@@ -94,8 +94,10 @@
                 <div class="playerelem-container">
                     <span class="playerelem-name">{uid}</span>
                     <Button text='+'
-                        --padding='1px 10px 1px' --float='right'/>
-                    <span class="playerelem-status">{roomdata.members[uid].state}</span>
+                        --padding='1px 10px 1px' --float='right' --color={roomdata.membercolors[uid]}/>
+                        <span class="playerelem-status"
+                            style="color:{roomdata.membercolors[uid]}"
+                            >{roomdata.members[uid].state}</span>
                 </div>
             {/each}
             {/if}
