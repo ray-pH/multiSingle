@@ -17,7 +17,10 @@
         div_message_container.scrollTop = div_message_container.scrollHeight;
     })
 
-    function chat_send(msg : string){ io.emit(socketevent.CHAT_MSG, msg); }
+    function chat_send(msg : string){ 
+        if (msg.trim().length == 0) return;
+        io.emit(socketevent.CHAT_MSG, msg); 
+    }
     function onSubmitChat(event : Event){
         let form = event.target as HTMLFormElement;
         const formData = new FormData(form);
