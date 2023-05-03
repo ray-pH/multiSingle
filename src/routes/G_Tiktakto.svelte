@@ -18,6 +18,8 @@
     var gamestate : gamestate = {
         board : [], currentplayer : 0,
         players : {}, playerorder : [],
+        lastplayed : [-1,-1],
+        winnerline : [[-1,-1], [-1,-1], [-1,-1]]
     };
 
     function get_scoredata(gs : gamestate) : scoredata[] {
