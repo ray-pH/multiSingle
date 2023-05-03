@@ -3,7 +3,7 @@ export enum userstate {
     room_host = 'Host', 
     room_wait = 'Not Ready', 
     room_ready = 'Ready', 
-    game = 'Game', 
+    game = 'in Game', 
     loading = 'Loading',
 };
 export const colors = {

@@ -10,7 +10,7 @@
 
     function is_allReady(members : id_dict<user>) : boolean {
         for (let uid in members){
-            if (members[uid].state == userstate.room_wait)
+            if (!(members[uid].state == userstate.room_ready || members[uid].state == userstate.room_host))
                 return false;
         }
         return true;
