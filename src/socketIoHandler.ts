@@ -60,7 +60,6 @@ export default function injectSocketIO(server : any) {
 
         // Lobby ===========================================
         socket.on(socketevent.ROOM_NEW, (setting : roomsetting) => {
-            console.log(setting);
             let roomid : string = "";
             if (setting == undefined || setting == null) setting = def_roomsetting;
             do  roomid = genRandomAlphanum(5); while (roomid in roomlist);
