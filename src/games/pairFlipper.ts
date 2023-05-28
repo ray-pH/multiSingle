@@ -31,8 +31,10 @@ export class PairFlipper implements Game {
 
     constructor(roomdata : room, _setting : any){
         let n = 8; // todo create a setting
-        let cards = [...Array(n).keys()].map(x => x.toString());
-        this.initGame(cards, roomdata);
+        const hanafuda_count = 48;
+        let cards = [...Array(hanafuda_count).keys()].map(x => x.toString());
+        shuffleArray(cards);
+        this.initGame(cards.slice(0,n), roomdata);
     }
 
     initGame(symbols : string[], roomdata : room){
