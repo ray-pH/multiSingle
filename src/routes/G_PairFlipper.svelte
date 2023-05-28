@@ -17,6 +17,11 @@
         board : [], boardstate : [], 
         players : {}, playerorder : [],
     };
+    //const imageModules = import.meta.glob("../../static/*.jpg");
+    const img_count = 48;
+    let image_urls = [...Array(img_count).keys()]
+        .map(x => `/images/hanafuda/${(x+1).toString().padStart(2,'0')}.gif`);
+
 
     function get_scoredata(gs : gamestate) : scoredata[] {
         let res : scoredata[] = [];
@@ -65,6 +70,7 @@
         io.on(socketevent.GAME_FINISH, () => {
             finished = true;
         });
+
     });
 
 </script>
@@ -98,7 +104,7 @@
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
     }
     .card-bg{
-        aspect-ratio: 1/1;
+        aspect-ratio: 68/118;
         padding: 5px;
     }
     .card {
@@ -112,7 +118,8 @@
         {#each get_cardlist(gamestate) as cd}
             <div class="card-bg" style="background-color:{get_color_from_cardstate(cd.cardstate)}">
                 <button class="card divbutton" on:click={() => {send_input(cd.index)}}>
-                    <FlipCard value_front={cd.value} 
+                    <FlipCard value={cd.value} 
+                        img_front={image_urls[parseInt(cd.value)]}
                         opened={cardopenstate.includes(cd.cardstate) || carddonestate.includes(cd.cardstate)}/>
                 </button>
             </div>

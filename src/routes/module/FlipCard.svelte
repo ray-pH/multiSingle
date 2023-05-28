@@ -1,6 +1,7 @@
 <script lang="ts">
-    export let value_front : string = 'a';
-    export let value_back  : string = 'back';
+    export let value : string = 'a';
+    export let img_front : string = '/images/hanafuda/01.gif';
+    export let value_back  : string = '';
     export let opened : boolean = false;
 
     let audio_card_flip : HTMLAudioElement = new Audio("/sound/240776__f4ngy__card-flip.wav.wav");
@@ -54,6 +55,12 @@
         background-color: white;
         color: black;
     }
+    .card-img {
+        width:100%;
+        height:100%;
+        object-fit: cover;
+        overflow: hidden;
+    }
 </style>
 
 <!-- <div class="card-container button-div" on:click={() => opened = !opened}> -->
@@ -61,7 +68,8 @@
     <div class="card">
         {#if opened}
             <div class="side front" transition:flip>
-                {value_front}
+                <img class="card-img" src={img_front} alt='card {value}'>
+                <!-- {value_front} -->
             </div>
         {:else}
             <div class="side back" transition:flip>
