@@ -1,17 +1,32 @@
 <script lang="ts">
     import { audio_init, play_instance, play_then_run } from '../../lib/soundlib.js';
-    let audio = audio_init();
-    let play_hover = ()=>play_instance(audio.button_hover);
+    import { onMount } from 'svelte';
+
+
+    type audiolib = {[key : string] : HTMLAudioElement};
+    let audio : audiolib;
+    let play_hover : Function;
+
+    onMount(() => {
+        audio = audio_init();
+        play_hover = ()=>play_instance(audio.button_hover);
+    });
 
     // css variables --padding --margin --color --bordercolor --textcolor --width
     export let action : Function = () => {};
     export let text   : string = 'button';
 
     export let disabled : boolean = false;
+    export let typesubmit   : boolean = false;
 </script>
 
 {#if disabled}
     <button disabled class="button">{text}</button>
+{:else if typesubmit}
+    <button on:mouseenter={play_hover} 
+            on:click={() => play_then_run(audio.button_click, action)}
+            type="submit"
+            class="button">{text}</button>
 {:else}
     <button on:mouseenter={play_hover} 
             on:click={() => play_then_run(audio.button_click, action)}
