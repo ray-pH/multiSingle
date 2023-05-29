@@ -21,6 +21,12 @@ export default function injectSocketIO(server : any) {
 
     const def_roomsetting : roomsetting = {game : games.pairFlipper};
     
+    function username_already_exists(username : string) : boolean {
+        for (let uid in userlist)
+            if (userlist[uid].name == username) return true;
+        return false;
+    }
+
     function user_removeFromRooms(uid : id) : void {
         let roomid_todelete = [];
         for (let rid in roomlist){
@@ -49,13 +55,23 @@ export default function injectSocketIO(server : any) {
         let userdata : user = { id : uid, name : 'anon', roomid:'lobby', state : userstate.lobby };
         userlist[userdata.id] = userdata;
         socket.emit(socketevent.USER_UPDATE, userdata);
-        socket.emit(socketevent.ROOMLIST_UPDATE, roomlist);
-        socket.join('lobby');
 
         socket.on('disconnect', () => {
             let lastroomid = userdata.roomid;
             user_remove(userdata);
             io.to(lastroomid).emit(socketevent.ROOM_UPDATE, roomlist[lastroomid]);
+        });
+
+        socket.on(socketevent.USER_LOGIN, (username : string) => {
+            if (!username_already_exists(username)) {
+                userdata.name = username;
+                socket.emit(socketevent.USER_LOGIN_RESP, true);
+                socket.emit(socketevent.USER_UPDATE, userdata);
+                socket.emit(socketevent.ROOMLIST_UPDATE, roomlist);
+                socket.join('lobby');
+            } else {
+                socket.emit(socketevent.USER_LOGIN_RESP, false);
+            }
         });
 
         // Lobby ===========================================

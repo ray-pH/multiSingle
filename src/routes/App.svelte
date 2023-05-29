@@ -4,11 +4,14 @@
     import type { room, user, id, id_dict, roomsetting } from '../lib/types'
     import { userstate, games, socketevent } from '../lib/types'
 
+    import Login from './Login.svelte'
     import Lobby from './Lobby.svelte'
     import Room from './Room.svelte'
     import Game from './Game.svelte'
 
     const def_roomsetting : roomsetting = {game : games.pairFlipper};
+
+    let logged_in : boolean = false;
 
     let roomlist : id_dict<room> = {};
     let userdata : user = { id : 'null', name : 'null', roomid : 'null', state : userstate.loading };
@@ -38,6 +41,13 @@
         io.on(socketevent.GAME_START_SERVER, () => {
             io.emit(socketevent.GAME_START);
         });
+        io.on(socketevent.USER_LOGIN_RESP, (success : boolean) => {
+            if (success) {
+                logged_in = true;
+            } else {
+                alert('username already exist');
+            }
+        });
     });
 
 </script>
@@ -45,7 +55,9 @@
 <style>
 </style>
 
-{#if userdata.state == userstate.lobby}
+{#if !logged_in}
+    <Login userdata={userdata}/>
+{:else if userdata.state == userstate.lobby}
     <Lobby userdata={userdata} roomlist={roomlist}/>
 {:else if userstate_room.includes(userdata.state)}
     <Room userdata={userdata} roomdata={roomdata}/>

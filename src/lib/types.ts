@@ -44,6 +44,8 @@ export type roomsetting = {
 }
 
 export enum socketevent {
+    USER_LOGIN        = 'USER_LOGIN',
+    USER_LOGIN_RESP   = 'USER_LOGIN_RESP',
     USER_UPDATE       = 'USER_UPDATE',
     ROOMLIST_UPDATE   = 'ROOMLIST_UPDATE',
     ROOM_NEW          = 'ROOM_NEW',
