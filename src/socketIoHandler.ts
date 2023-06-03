@@ -27,6 +27,15 @@ export default function injectSocketIO(server : any) {
         return false;
     }
 
+    function room_newhost(roomid : id) : void {
+        if (!(roomid in roomlist)) return;
+        let roommembers = roomlist[roomid].members;
+        let newhostid = Object.keys(roommembers)[0];
+        roomlist[roomid].hostid = newhostid;
+        io.to(roomid).emit(socketevent.ROOM_NEWHOST, newhostid);
+        // io.to(roomid).emit(socketevent.ROOM_UPDATE, roomlist[roomid]);
+    }
+
     function user_removeFromRooms(uid : id) : void {
         let roomid_todelete = [];
         for (let rid in roomlist){
@@ -35,8 +44,16 @@ export default function injectSocketIO(server : any) {
             // user exists, delete
             delete members[uid];
             delete roomlist[rid].membercolors[uid];
+
             //check if room is empty
-            if (Object.keys(members).length < 1) roomid_todelete.push(rid);
+            if (Object.keys(members).length < 1) {
+                roomid_todelete.push(rid);
+                continue;
+            }
+            //check if roomhost doesn't exist : imply roomhost is leaving room
+            if (!(roomlist[rid].hostid in members)){
+                room_newhost(rid);
+            }
         }
         for (let rid of roomid_todelete) delete roomlist[rid];
 
@@ -129,6 +146,17 @@ export default function injectSocketIO(server : any) {
         socket.on(socketevent.GAME_TOGGLEREADY, () => {
             userdata.state = (userdata.state == userstate.room_wait) ? 
                 userstate.room_ready : userstate.room_wait;
+            socket.emit(socketevent.USER_UPDATE, userdata);
+            io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
+        });
+        socket.on(socketevent.USER_ASNEWHOST, () => {
+            // new host assignment request
+            //
+            if (userdata.roomid == 'lobby') return;
+            // check if requesting user is the same as the user assigned by the server
+            if (userdata.id != roomlist[userdata.roomid].hostid) return;
+
+            userdata.state = userstate.room_host;
             socket.emit(socketevent.USER_UPDATE, userdata);
             io.to(userdata.roomid).emit(socketevent.ROOM_UPDATE, roomlist[userdata.roomid]);
         });

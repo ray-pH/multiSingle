@@ -38,6 +38,11 @@
         io.on(socketevent.ROOM_UPDATE, (room : room) => {
             roomdata = room;
         });
+        io.on(socketevent.ROOM_NEWHOST, (id : id) => {
+            // check if user is the new host
+            // if yes, request status change to the server
+            if (id == userdata.id) io.emit(socketevent.USER_ASNEWHOST);
+        });
         io.on(socketevent.GAME_START_SERVER, () => {
             io.emit(socketevent.GAME_START);
         });

@@ -48,6 +48,8 @@ export enum socketevent {
     USER_LOGIN_RESP   = 'USER_LOGIN_RESP',
     USER_UPDATE       = 'USER_UPDATE',
     ROOMLIST_UPDATE   = 'ROOMLIST_UPDATE',
+    ROOM_NEWHOST      = 'ROOM_NEWHOST',
+    USER_ASNEWHOST    = 'USER_ASNEWHOST',
     ROOM_NEW          = 'ROOM_NEW',
     ROOM_JOIN         = 'ROOM_JOIN',
     ROOM_LEAVE        = 'ROOM_LEAVE',
