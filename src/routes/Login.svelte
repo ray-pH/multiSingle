@@ -54,6 +54,9 @@
         font-weight: bold;
         margin-bottom: 20px;
     }
+    #username {
+        margin-bottom: 10px;
+    }
 </style>
 
 <div id="main-container" class="main">
@@ -61,11 +64,11 @@
         <div class="title">MULTISINGLE</div>
         UserID : {userdata.id}
         <br>
-        Input Username :
+        Username :
         <form on:submit|preventDefault={onLogin}>
             <input type="text" id="username" name="username" autocomplete="off" value=""/>
             <br>
-            <Button text='Next'  typesubmit={true}
+            <Button text='Login'  typesubmit={true}
                 --margin='0px 10px 0px 0px' --textcolor='white' --bordercolor='white'/>
         </form>
     </div>
