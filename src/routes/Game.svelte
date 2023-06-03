@@ -52,7 +52,7 @@
     <div id="playerlist-container">
         {#each Object.keys(roomdata.members) as uid}
             <div class="playerinfo" style="background-color:{roomdata.membercolors[uid]}">
-                {uid}
+                {roomdata.members[uid].name}
                 <span class="playerscore">{get_score(uid, userscore)}</span>
             </div>
         {/each}

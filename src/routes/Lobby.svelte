@@ -17,6 +17,16 @@
         return { game : selected_game };
     }
 
+    function get_roomHostID(roomid : id) : id {
+        return roomlist[roomid].hostid;
+    }
+    function get_roomHostUname(roomid : id) : string {
+        let hostid = get_roomHostID(roomid);
+        let hostuser : user = roomlist[roomid].members[hostid];
+        if (hostuser) return hostuser.name;
+        else return 'null';
+    }
+
     function room_new(setting: roomsetting){ io.emit(socketevent.ROOM_NEW, setting); }
     function room_join(roomid : id){ io.emit(socketevent.ROOM_JOIN, roomid); }
     function sendDebug(){ io.emit('debug', null); }
@@ -115,7 +125,8 @@
             <span class="container-label">Public Rooms :</span>
             <div id="roomlist-container">
                 {#each Object.keys(roomlist) as rid}
-                    <Button text='{rid} (host : {roomlist[rid].hostid})' 
+                    <!-- <Button text='{rid} (host : {roomlist[rid].hostid})' --> 
+                    <Button text='{get_roomHostUname(rid)} ({rid})' 
                         action={() => room_join(rid)} 
                         --margin='10px 0px 0px 0px' --textcolor='white' --width='100%'/>
                 {/each}

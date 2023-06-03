@@ -92,7 +92,7 @@
             {#if roomdata != null}
             {#each Object.keys(roomdata.members) as uid}
                 <div class="playerelem-container">
-                    <span class="playerelem-name">{uid}</span>
+                    <span class="playerelem-name">{roomdata.members[uid].name}</span>
                     <Button text='+'
                         --padding='1px 10px 1px' --float='right' --color={roomdata.membercolors[uid]}/>
                         <span class="playerelem-status"

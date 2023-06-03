@@ -35,7 +35,7 @@
     <div class="finish-container">
         {#each scoredata as sd}
             <div class="playerinfo" style="background-color:{playercolors[sd.id]}">
-                {sd.id}
+                {sd.name}
                 <span class="playerscore">{sd.score}</span>
             </div>
         {/each}

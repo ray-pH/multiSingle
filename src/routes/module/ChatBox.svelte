@@ -96,7 +96,8 @@
     <div class='message-container' id='message-container'>
         {#each chat as chatmessage }
             <div class="chatbox">
-                <span class="chatname" style="background-color:{color_dict[chatmessage.id]}">{chatmessage.id}</span>
+                <span class="chatname" style="background-color:{color_dict[chatmessage.id]}">
+                    {roomdata.members[chatmessage.id].name}</span>
                 <div class="chatmsg">{chatmessage.message}</div>
             </div>
         {/each}
