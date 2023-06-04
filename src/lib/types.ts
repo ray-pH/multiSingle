@@ -37,6 +37,7 @@ export type gameConstructor = { new(r : room, setting : any) : Game }
 export enum games {
     pairFlipper = 'Pair Flipper',
     tiktakto    = 'TikTakTo',
+    g2048       = '2048'
 }
 
 export type roomsetting = {

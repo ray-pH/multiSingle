@@ -5,10 +5,12 @@ import { userstate, games, colorlist, socketevent } from './lib/types.js'
 
 import * as pairFlipper from './games/pairFlipper.js'
 import * as tiktakto from './games/tiktakto.js'
+import * as g2048 from './games/g2048.js'
 
 const gameConstructors : Map<games, gameConstructor> = new Map<games, gameConstructor>([
     [games.pairFlipper, pairFlipper.PairFlipper],
     [games.tiktakto, tiktakto.Tiktakto],
+    [games.g2048, g2048.G2048],
 ]);
 
 
