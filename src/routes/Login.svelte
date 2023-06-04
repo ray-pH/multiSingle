@@ -48,20 +48,41 @@
         text-align: center;
         justify-content: center;
     }
+    .title-container {
+        margin-bottom: 20px;
+    }
     .title {
         font-size: 2em;
         font-weight: bold;
-        margin-bottom: 20px;
     }
     #username {
         margin-bottom: 10px;
+    }
+
+    .github-link{
+        text-decoration:none;
+        color: black;
+        background-color: white;
+        padding: 2px 10px 2px;
+        border-radius: 10px;
+    }
+    .github-link:hover{
+        color: white;
+        background-color: #3e92cc;
+    }
+    .github-link:visited{
+        text-decoration:none;
     }
 </style>
 
 <div id="main-container" class="main">
     <div class="content">
         <img src="favicons/android-chrome-512x512.png" alt="multisingle logo" width="200px">
-        <div class="title">MULTISINGLE</div>
+        <div class="title-container">
+            <div class="title">MULTISINGLE</div>
+            <a href="https://github.com/ray-pH/multiSingle" class="github-link">@GitHub</a>
+        </div>
+
         UserID : {userdata.id}
         <br>
         Username :

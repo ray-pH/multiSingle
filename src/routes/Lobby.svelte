@@ -82,6 +82,21 @@
         text-align: center;
         margin: 20px 0 20px 0;
     }
+
+    .github-link{
+        text-decoration:none;
+        color: black;
+        background-color: white;
+        padding: 2px 10px 2px;
+        border-radius: 10px;
+    }
+    .github-link:hover{
+        color: white;
+        background-color: #3e92cc;
+    }
+    .github-link:visited{
+        text-decoration:none;
+    }
 </style>
 
 <div id="main-container" class="main">
@@ -93,7 +108,8 @@
     <!--     room     : {userdata.roomid}<br> -->
     <div class="title-container">
         <img src="favicons/android-chrome-512x512.png" alt="multisingle logo" width="80px">
-        <br> Username : {userdata.name}
+        <br><a href="https://github.com/ray-pH/multiSingle" class="github-link">@GitHub</a>
+        <br><br> Username : {userdata.name}
     </div>
 
     {#if state_setroom}
