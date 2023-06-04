@@ -76,14 +76,24 @@
         background-color: var(--ccyan);
         color: white;
     }
+
+    .title-container {
+        width: 100%;
+        text-align: center;
+        margin: 20px 0 20px 0;
+    }
 </style>
 
 <div id="main-container" class="main">
-    <button on:click={sendDebug}>debug</button>
-    <div id="userinfo-container">
-        UserID   : {userdata.id}<br>
-        Username : {userdata.name}<br>
-        room     : {userdata.roomid}<br>
+    <!-- <button on:click={sendDebug}>debug</button> -->
+    <!-- <div id="userinfo-container"> -->
+    <!--     UserID   : {userdata.id}<br> -->
+    <!--     Username : {userdata.name}<br> -->
+    <!-- </div> -->
+    <!--     room     : {userdata.roomid}<br> -->
+    <div class="title-container">
+        <img src="favicons/android-chrome-512x512.png" alt="multisingle logo" width="80px">
+        <br> Username : {userdata.name}
     </div>
 
     {#if state_setroom}
