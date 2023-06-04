@@ -42,9 +42,8 @@
         text-align: center;
         height: 100%;
     }
-    .vertical-center {
-        margin-top: 50%;
-        transform: translateY(-50%);
+    .content {
+        margin-top: 50px;
         align-items: center;
         text-align: center;
         justify-content: center;
@@ -60,7 +59,8 @@
 </style>
 
 <div id="main-container" class="main">
-    <div class="vertical-center">
+    <div class="content">
+        <img src="favicons/android-chrome-512x512.png" alt="multisingle logo" width="200px">
         <div class="title">MULTISINGLE</div>
         UserID : {userdata.id}
         <br>
