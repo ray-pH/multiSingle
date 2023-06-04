@@ -62,6 +62,7 @@ export class Tiktakto implements Game {
         this.lastplayed = inp.position;
         if(this.board[row][col] != square.empty) return; // no clicking on non empty square
         this.board[row][col] = inp.symbol;
+        // advance turn
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
 
         // calc score
