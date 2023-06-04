@@ -166,7 +166,7 @@
                         on:click={()=>{send_input([j,i], selected_symbol)}}>
                 </button>
             {:else}
-                <!-- non empty squre -->
+                <!-- non empty square -->
                 {#if finished && is_winningpos([j,i], gamestate)}
                     <button class="board-cell"
                             style="background-color:{playercolors[get_prev_player_id(gamestate)]}"
