@@ -3,13 +3,18 @@ function randomAlphanum11() : string{
     if (res.length == 11) return res;
     return randomAlphanum11();
 }
+
+/** Random integer [0,1,2,...,max] */
+export function randint(max : number) : number {
+    return Math.floor(Math.random() * (max + 1));
+}
 export function genRandomAlphanum(len : number) : string{
     if (len <= 11) return randomAlphanum11().substring(0,len);
     return randomAlphanum11() + genRandomAlphanum(len-11);
 }
 export function shuffleArray(array : Array<any>) : void {
     for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = randint(i);
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
