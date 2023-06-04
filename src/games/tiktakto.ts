@@ -34,7 +34,7 @@ export class Tiktakto implements Game {
     lastplayed : [number, number] = [-1,-1];
     winnerline : pos[] = [[-1,-1],[-1,-1],[-1,-1]];
 
-    constructor(roomdata : room, _setinng : any){
+    constructor(roomdata : room, _setting : any){
         this.initGame(5, roomdata);
     }
 
