@@ -6,6 +6,7 @@
     import ChatBox from './module/ChatBox.svelte';
     import G_PairFlipper from './G_PairFlipper.svelte'
     import G_Tiktakto from './G_Tiktakto.svelte'
+    import G_2048 from './G_2048.svelte'
 
     export let userdata : user;
     export let roomdata : room;
@@ -61,6 +62,8 @@
         <G_PairFlipper userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore}/>
     {:else if roomdata.setting.game == games.tiktakto}
         <G_Tiktakto userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore} --selfcolor={selfcolor}/>
+    {:else if roomdata.setting.game == games.g2048}
+        <G_2048 userdata={userdata} playercolors={roomdata.membercolors} f_updatescore={f_updatescore} --selfcolor={selfcolor}/>
     {/if}
 
     <ChatBox roomdata={roomdata}/>
