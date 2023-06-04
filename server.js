@@ -1,7 +1,7 @@
 // server.js
 import http from "http";
-import { handler } from './build/handler.js'; // <- Import SvelteKit handlers
-import injectSocketIO from "./server/socketIoHandler.js"; // The SocketIO stuff (see next step)
+import { handler } from './build/handler.js'; 
+import injectSocketIO from "./server/socketIoHandler.js";
 import express from 'express';
 
 const PORT = process.env.PORT || 3000;
