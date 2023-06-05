@@ -101,7 +101,7 @@ export class PairFlipper implements Game {
     }
 
     sendInput(inp : gameinput) : [boolean, string]{
-        if (inp == null) return [false, ""];
+        if (inp == null) return [true, ""];
         let playernum = this.playerorder.indexOf(inp.uid);
         if (playernum < 0) return [false, ""];
         this.clickCard(playernum, inp.clicked_card);

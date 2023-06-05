@@ -54,7 +54,7 @@ export class Tiktakto implements Game {
     }
 
     sendInput(inp : gameinput) : [boolean, string] {
-        if (inp == null) return [false, ""];
+        if (inp == null) return [true, ""];
             // validate turn
         if (inp.uid != this.playerorder[this.currentplayer]) return [false, "it's not your turn"]; 
             // if someone already won, skip
