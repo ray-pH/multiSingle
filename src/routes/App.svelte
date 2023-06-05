@@ -46,6 +46,9 @@
         io.on(socketevent.GAME_START_SERVER, () => {
             io.emit(socketevent.GAME_START);
         });
+        io.on(socketevent.GAME_INVALIDINPUT, (msg : string) => {
+            if (msg.length != 0) alert(msg);
+        });
         io.on(socketevent.USER_LOGIN_RESP, (success : boolean) => {
             if (success) {
                 logged_in = true;
