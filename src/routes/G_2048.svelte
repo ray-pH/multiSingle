@@ -1,6 +1,7 @@
 <script lang="ts">
     import { io } from '../lib/webSocketConnection.js';
     import { onMount } from 'svelte';
+    import { swipe } from 'svelte-gestures';
     import { arrayEq } from '$lib/utils.js';
     import { userstate, socketevent } from '../lib/types';
     import type { room, user, id, id_dict, color, scoredata } from '../lib/types';
@@ -47,6 +48,19 @@
             direction : dir,
         }
         io.emit(socketevent.GAME_INPUT, inp);
+    }
+
+    function onBoardSwipe(e : CustomEvent){
+        let edir = e.detail.direction;
+        if (edir == undefined) return;
+        let map : Map<string, direction> = new Map([
+            ["left"   , direction.LEFT],
+            ["right"  , direction.RIGHT],
+            ["top"    , direction.UP],
+            ["bottom" , direction.DOWN],
+        ]);
+        let dir = map.get(edir);
+        if (dir != undefined) send_input(dir);
     }
 
     function onKeydown(e : KeyboardEvent){
@@ -133,7 +147,9 @@
             </span>
         </span>
     </div>
-    <div class="board" on:keydown|preventDefault={onKeydown}>
+    <div class="board"
+        use:swipe={{ timeframe: 300, minSwipeDistance: 100}} on:swipe={onBoardSwipe}
+        >
         {#each gamestate.board as row}
         {#each row as square}
             {#if square.value == 0}
