@@ -1,7 +1,6 @@
 <script>
     import App from "./App.svelte";
     import Login from "./Login.svelte";
-    import Chat from "./Chat.svelte";
 </script>
 
 <style>
@@ -24,5 +23,3 @@
 <div class="main">
     <App />
 </div>
-<!-- <Login /> -->
-<!-- <Chat/> -->
