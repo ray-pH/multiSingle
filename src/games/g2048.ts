@@ -75,12 +75,23 @@ export class G2048 implements Game {
         let ci = 0; // index for inserting into combined
 
         let stripped = arr.filter((x)=> x.value != 0);
-        for (let i = 0; i < stripped.length-1; i++){
+        for (let i = 0; i < stripped.length; i++){
+
+            // if only one left, put it in the combined
+            if (i == stripped.length - 1){
+                combined[ci] = { value:stripped[i].value, owner:stripped[i].owner };
+                break;
+            }
+
             if (eqSquare(stripped[i], stripped[i+1])){
                 combined[ci] = { value:2*stripped[i].value, owner:stripped[i].owner };
                 ci++; i++;
+            }else{
+                combined[ci] = { value:stripped[i].value, owner:stripped[i].owner };
+                ci++;
             }
         }
+
         return combined;
     }
 
@@ -109,7 +120,7 @@ export class G2048 implements Game {
                     }
                 }
                 break;
-            case direction.DOWN:
+            case direction.UP:
                 for (let col = 0; col < len; col++){
                     let arr = new Array<square>(len);
                     for (let j = 0; j < len; j++){
@@ -122,7 +133,7 @@ export class G2048 implements Game {
                     }
                 }
                 break;
-            case direction.UP:
+            case direction.DOWN:
                 for (let col = 0; col < len; col++){
                     let arr = new Array<square>(len);
                     for (let j = 0; j < len; j++){
