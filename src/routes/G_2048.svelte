@@ -40,6 +40,11 @@
     function get_prev_player_id(gs : gamestate) : id{
         return gs.playerorder[(gs.currentplayer + gs.playerorder.length - 1) % gs.playerorder.length]
     }
+    function get_player_name(gs : gamestate, uid : id) : string {
+        let player = gs.players[uid];
+        if (player == undefined) return "null"
+        return player.name;
+    }
 
     function send_input(dir : direction) : void{
         if (get_curr_player_id(gamestate) != userdata.id) return; // if not this player turn, skip
@@ -137,13 +142,13 @@
     <div class="turn-indicator-container">
         <span class="turn-indicator turn-current">
             <span class="turn-indicator-id" style="background-color:{playercolors[get_curr_player_id(gamestate)]}">
-                {get_curr_player_id(gamestate)}
+                {get_player_name(gamestate,get_curr_player_id(gamestate))}
             </span>
         </span>'s turn
         <span class="turn-indicator turn-next">
             next :
             <span class="turn-indicator-id" style="background-color:{playercolors[get_next_player_id(gamestate)]}">
-                {get_next_player_id(gamestate)}
+                {get_player_name(gamestate,get_next_player_id(gamestate))}
             </span>
         </span>
     </div>
