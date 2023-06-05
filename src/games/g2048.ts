@@ -27,11 +27,17 @@ export type gameinput = {
     direction : direction,
 }
 
+/**
+ * The scoring system :
+ *     merging of x + x give a score of x^2
+*/
+type scores = number[];
 export class G2048 implements Game {
     board : square[][] = []
     players : id_dict<playerdata> = {};
     playerorder : id[] = [];
     currentplayer : number = 0;
+    
 
     constructor(roomdata : room, _setting : any){
         this.initGame(6, roomdata);
@@ -67,7 +73,11 @@ export class G2048 implements Game {
         }
     }
 
-    combineArray(arr : square[]) : square[]{
+    combineArray(arr : square[]) : [square[], scores]{
+
+        // score to add
+        let dscore : scores = new Array(this.playerorder.length).fill(0);
+
         // imagine move "left" on the array
         // [2,0,2,4,2] -> [4,4,2]
         let combined : square[] = new Array(arr.length).fill({value:0, owner:-1});
@@ -83,7 +93,11 @@ export class G2048 implements Game {
             }
 
             if (eqSquare(stripped[i], stripped[i+1])){
+                // combine two square
                 combined[ci] = { value:2*stripped[i].value, owner:stripped[i].owner };
+                // add score
+                dscore[stripped[i].owner] += stripped[i].value * stripped[i].value;
+                // advance
                 ci++; i++;
             }else{
                 combined[ci] = { value:stripped[i].value, owner:stripped[i].owner };
@@ -91,23 +105,26 @@ export class G2048 implements Game {
             }
         }
 
-        return combined;
+        return [combined, dscore];
     }
 
     /** try moving the board, return wheter the board is changing or not */
-    moveBoard(dir : direction) : boolean{
+    moveBoard(dir : direction) : [boolean, scores] {
         let len = this.board.length;
         let changed = false;
+
+        // score to add
+        let dscore : scores = new Array(this.playerorder.length).fill(0);
+
         switch (dir){
             case direction.LEFT:
                 for (let row = 0; row < len; row++){
                     let arr = this.board[row];
-                    let combined = this.combineArray(arr);
+                    let [combined, ddscore] = this.combineArray(arr);
                     if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
 
-                    for (let i = 0; i < len; i++){
-                        this.board[row][i] = combined[i];
-                    }
+                    for (let i = 0; i < dscore.length; i++) dscore[i] += ddscore[i]
+                    for (let i = 0; i < len; i++)  this.board[row][i] = combined[i];
                 }
                 break;
             case direction.RIGHT:
@@ -117,11 +134,11 @@ export class G2048 implements Game {
                         arr[i] = this.board[row][len-1-i];
                     }
 
-                    let combined = this.combineArray(arr);
+                    let [combined, ddscore] = this.combineArray(arr);
                     if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
-                    for (let i = 0; i < len; i++){
-                        this.board[row][i] = combined[len-1-i];
-                    }
+
+                    for (let i = 0; i < dscore.length; i++) dscore[i] += ddscore[i]
+                    for (let i = 0; i < len; i++) this.board[row][i] = combined[len-1-i];
                 }
                 break;
             case direction.UP:
@@ -131,11 +148,11 @@ export class G2048 implements Game {
                         arr[j] = this.board[j][col];
                     }
 
-                    let combined = this.combineArray(arr);
+                    let [combined, ddscore] = this.combineArray(arr);
                     if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
-                    for (let j = 0; j < len; j++){
-                        this.board[j][col] = combined[j];
-                    }
+
+                    for (let i = 0; i < dscore.length; i++) dscore[i] += ddscore[i]
+                    for (let j = 0; j < len; j++) this.board[j][col] = combined[j];
                 }
                 break;
             case direction.DOWN:
@@ -145,15 +162,15 @@ export class G2048 implements Game {
                         arr[j] = this.board[len-1-j][col];
                     }
 
-                    let combined = this.combineArray(arr);
+                    let [combined, ddscore] = this.combineArray(arr);
                     if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
-                    for (let j = 0; j < len; j++){
-                        this.board[j][col] = combined[len-1-j];
-                    }
+
+                    for (let i = 0; i < dscore.length; i++) dscore[i] += ddscore[i]
+                    for (let j = 0; j < len; j++) this.board[j][col] = combined[len-1-j];
                 }
                 break;
         }
-        return changed;
+        return [changed, dscore];
     }
 
     sendInput(inp : gameinput) : [boolean, string] {
@@ -161,12 +178,16 @@ export class G2048 implements Game {
         if (inp.uid != this.playerorder[this.currentplayer]) return [false, ""]; // validate turn
 
         // do move
-        let changed = this.moveBoard(inp.direction);
+        let [changed, dscore] = this.moveBoard(inp.direction);
         if (!changed) return [false, "direction is invalid"];
+
+        // add score
+        for (let i = 0; i < dscore.length; i++){
+            this.players[this.playerorder[i]].score += dscore[i];
+        }
 
         // advance turn
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
-        //TODO : calculate score
         
         //add a random 2
         let [erow, ecol] = this.get_emptySquarePos();
