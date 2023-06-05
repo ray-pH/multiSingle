@@ -1,5 +1,5 @@
 import type { user, room, id, color, id_dict, Game } from '../lib/types.js'
-import { shuffleArray, randint } from '../lib/utils.js'
+import { shuffleArray, randint, arrayEqCustom } from '../lib/utils.js'
 
 export type playerdata = {
     id : id, name: string, score : number,
@@ -94,13 +94,17 @@ export class G2048 implements Game {
         return combined;
     }
 
-    moveBoard(dir : direction){
+    /** try moving the board, return wheter the board is changing or not */
+    moveBoard(dir : direction) : boolean{
         let len = this.board.length;
+        let changed = false;
         switch (dir){
             case direction.LEFT:
                 for (let row = 0; row < len; row++){
                     let arr = this.board[row];
                     let combined = this.combineArray(arr);
+                    if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
+
                     for (let i = 0; i < len; i++){
                         this.board[row][i] = combined[i];
                     }
@@ -114,6 +118,7 @@ export class G2048 implements Game {
                     }
 
                     let combined = this.combineArray(arr);
+                    if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
                     for (let i = 0; i < len; i++){
                         this.board[row][i] = combined[len-1-i];
                     }
@@ -127,6 +132,7 @@ export class G2048 implements Game {
                     }
 
                     let combined = this.combineArray(arr);
+                    if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
                     for (let j = 0; j < len; j++){
                         this.board[j][col] = combined[j];
                     }
@@ -140,20 +146,24 @@ export class G2048 implements Game {
                     }
 
                     let combined = this.combineArray(arr);
+                    if (!arrayEqCustom(arr,combined, eqSquare)) changed = true;
                     for (let j = 0; j < len; j++){
                         this.board[j][col] = combined[len-1-j];
                     }
                 }
                 break;
         }
+        return changed;
     }
 
     sendInput(inp : gameinput) : [boolean, string] {
-        if (inp == null) return [false, ""];
+        if (inp == null) return [true, ""];
         if (inp.uid != this.playerorder[this.currentplayer]) return [false, ""]; // validate turn
 
         // do move
-        this.moveBoard(inp.direction);
+        let changed = this.moveBoard(inp.direction);
+        if (!changed) return [false, "direction is invalid"];
+
         // advance turn
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
         //TODO : calculate score
@@ -161,6 +171,7 @@ export class G2048 implements Game {
         //add a random 2
         let [erow, ecol] = this.get_emptySquarePos();
         this.board[erow][ecol] = {value : 2, owner : this.currentplayer}
+        return [true, ""];
     }
 
     getState() : gamestate {
