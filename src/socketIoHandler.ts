@@ -193,7 +193,14 @@ export default function injectSocketIO(server : any) {
         // Game ===========================================
         socket.on(socketevent.GAME_INPUT, (input : any) => {
             let game : Game = gamelist[userdata.roomid];
-            game.sendInput(input);
+            let [valid, msg] = game.sendInput(input);
+
+            // if input is not valid, send msg to user
+            if (!valid){
+                socket.emit(socketevent.GAME_INVALIDINPUT, msg);
+                return;
+            }
+
             // emit gamestate
             let gamestate : any = game.getState();
             io.to(userdata.roomid).emit(socketevent.GAME_UPDATESTATE, gamestate);

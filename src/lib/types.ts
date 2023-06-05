@@ -28,7 +28,7 @@ export type scoredata = {id : id, name : string, score : number};
 export type chatmessage = { id : id, message : string };
 
 export interface Game {
-    sendInput(inp : any) : void;
+    sendInput(inp : any) : [boolean, string];
     getState() : any;
     isDone()   : boolean;
 }
@@ -60,6 +60,7 @@ export enum socketevent {
     GAME_START_SERVER = 'GAME_START_SERVER',
     GAME_START        = 'GAME_START',
     GAME_INPUT        = 'GAME_INPUT',
+    GAME_INVALIDINPUT = 'GAME_INVALIDINPUT',
     GAME_UPDATESTATE  = 'GAME_UPDATESTATE',
     GAME_FINISH       = 'GAME_FINISH',
     GAME_TOROOM       = 'GAME_TOROOM',

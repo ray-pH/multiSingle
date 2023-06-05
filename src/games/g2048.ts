@@ -1,7 +1,6 @@
 import type { user, room, id, color, id_dict, Game } from '../lib/types.js'
 import { shuffleArray, randint } from '../lib/utils.js'
 
-
 export type playerdata = {
     id : id, name: string, score : number,
 }
@@ -149,9 +148,9 @@ export class G2048 implements Game {
         }
     }
 
-    sendInput(inp : gameinput) : void {
-        if (inp == null) return;
-        if (inp.uid != this.playerorder[this.currentplayer]) return; // validate turn
+    sendInput(inp : gameinput) : [boolean, string] {
+        if (inp == null) return [false, ""];
+        if (inp.uid != this.playerorder[this.currentplayer]) return [false, ""]; // validate turn
 
         // do move
         this.moveBoard(inp.direction);

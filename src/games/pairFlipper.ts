@@ -100,11 +100,13 @@ export class PairFlipper implements Game {
         return true;
     }
 
-    sendInput(inp : gameinput) : void{
-        if (inp == null) return;
+    sendInput(inp : gameinput) : [boolean, string]{
+        if (inp == null) return [false, ""];
         let playernum = this.playerorder.indexOf(inp.uid);
-        if (playernum < 0) return;
+        if (playernum < 0) return [false, ""];
         this.clickCard(playernum, inp.clicked_card);
+
+        return [true, ""]
     }
 
     getState() : gamestate {

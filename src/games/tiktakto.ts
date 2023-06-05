@@ -53,14 +53,17 @@ export class Tiktakto implements Game {
         this.currentplayer = 0;
     }
 
-    sendInput(inp : gameinput) : void {
-        if (inp == null) return;
-        if (inp.uid != this.playerorder[this.currentplayer]) return; // validate turn
-        if (!arrayEq(this.winnerline[0],[-1,-1])) return; // if someone already won, skip
+    sendInput(inp : gameinput) : [boolean, string] {
+        if (inp == null) return [false, ""];
+            // validate turn
+        if (inp.uid != this.playerorder[this.currentplayer]) return [false, "it's not your turn"]; 
+            // if someone already won, skip
+        if (!arrayEq(this.winnerline[0],[-1,-1])) return [false, ""]; 
 
         let [row, col]  = inp.position;
         this.lastplayed = inp.position;
-        if(this.board[row][col] != square.empty) return; // no clicking on non empty square
+            // no clicking on non empty square
+        if(this.board[row][col] != square.empty) return [false, ""]; 
         this.board[row][col] = inp.symbol;
         // advance turn
         this.currentplayer = (this.currentplayer + 1) % this.playerorder.length;
@@ -70,6 +73,7 @@ export class Tiktakto implements Game {
         if (!arrayEq(this.winnerline[0],[-1,-1])){
             this.players[inp.uid].score += 100;
         }
+        return [true, ""];
     }
 
     checkWin() : [pos, pos, pos] {
