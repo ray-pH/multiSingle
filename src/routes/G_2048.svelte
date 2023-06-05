@@ -156,7 +156,8 @@
                 <div class="board-cell" style="background-color:grey">
                 </div>
             {:else}
-                <div class="board-cell" style="background-color:{playercolors[get_prev_player_id(gamestate)]}">
+                <div class="board-cell"
+                    style="background-color:{playercolors[gamestate.playerorder[square.owner]]}">
                     <span class="cell-value">
                         {square.value}
                     </span>
