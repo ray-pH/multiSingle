@@ -54,6 +54,7 @@
         {#each Object.keys(roomdata.members) as uid}
             <div class="playerinfo" style="background-color:{roomdata.membercolors[uid]}">
                 {roomdata.members[uid].name}
+                <span style="font-weight: bold">{uid == userdata.id ? "(you)" : ""}</span>
                 <span class="playerscore">{get_score(uid, userscore)}</span>
             </div>
         {/each}

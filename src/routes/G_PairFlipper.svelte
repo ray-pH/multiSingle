@@ -128,5 +128,7 @@
 </div>
 
 {#if finished}
-    <Game_Finish scoredata={get_scoredata(gamestate)} playercolors={playercolors}/>
+    <Game_Finish 
+        userid={userdata.id}
+        scoredata={get_scoredata(gamestate)} playercolors={playercolors}/>
 {/if}

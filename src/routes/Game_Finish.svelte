@@ -3,9 +3,10 @@
     import FloatingWindow from './module/FloatingWindow.svelte'
     import Button from './module/Button.svelte';
 
-    import type { id_dict, color, scoredata } from '../lib/types';
+    import type { id_dict, color, scoredata, id } from '../lib/types';
     import { userstate, games, socketevent } from '../lib/types'
 
+    export let userid : id;
     export let scoredata : scoredata[] = [];
     export let playercolors  : id_dict<color> = {};
 
@@ -36,6 +37,7 @@
         {#each scoredata as sd}
             <div class="playerinfo" style="background-color:{playercolors[sd.id]}">
                 {sd.name}
+                <span style="font-weight: bold">{sd.id == userid ? "(you)" : ""}</span>
                 <span class="playerscore">{sd.score}</span>
             </div>
         {/each}
