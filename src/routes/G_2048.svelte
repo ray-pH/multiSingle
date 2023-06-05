@@ -47,7 +47,12 @@
     }
 
     function send_input(dir : direction) : void{
-        if (get_curr_player_id(gamestate) != userdata.id) return; // if not this player turn, skip
+        // if not this player turn, alert
+        if (get_curr_player_id(gamestate) != userdata.id){
+            alert("it's not your turn");
+            return;
+        }
+
         let inp : gameinput = {
             uid : userdata.id,
             direction : dir,
